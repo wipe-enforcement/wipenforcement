@@ -1,9 +1,17 @@
 __pycache__/
 *.pyc
+*.egg-info/
+.venv/
+venv/
 .DS_Store
 .env
 .env.*
 *.pem
-# collected infringement intel never enters permanent history
+
+# Collected infringement intel never enters a repository's permanent history:
+# unverified allegations belong in the access-controlled vault, not in git,
+# where they would be readable by every future collaborator and unrecoverable
+# once pushed.
 vault/
+site/vault/
 *.findings.json
