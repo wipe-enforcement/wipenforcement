@@ -323,8 +323,7 @@ class Probe:
 def build_probes(title_ar: str | None, title_en: str | None,
                  *, year: str | None = None,
                  unit: str = "فيلم",
-                 brands: Sequence[str] = ("mycima", "wecima", "egybest",
-                                          "laroza", "arabseed", "cima4u"),
+                 brands: Sequence[str] | None = None,
                  include_brand: bool = True,
                  max_per_slot: int = 3,
                  ) -> list[Probe]:
@@ -348,6 +347,14 @@ def build_probes(title_ar: str | None, title_en: str | None,
     names = [n for n in (title_ar, title_en) if n]
     if not names:
         return out
+    # The default brand set comes from the loaded corpus, not from a literal in
+    # the signature. A hardcoded default silently degrades to *zero* brand-bearing
+    # probes on any other corpus — the function still returns a large probe set,
+    # so nothing fails, and the one shape the source describes as the expert's
+    # actual contribution simply stops being generated. That is the difference
+    # between a default that is convenient and a default that lies.
+    if brands is None:
+        brands = tuple(b.id for b in _INTEL.brands)
     slots = {k: v[:max_per_slot] for k, v in LEXICON.items()}
     brand_names = []
     reg = BrandRegistry()
