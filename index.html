@@ -347,6 +347,50 @@ footer{padding:2.6rem 0 3.2rem}
       Everything else in this industry watches the past.</p>
 
     <div class="obj">
+      <div class="t">The registration feed is not enough<code>certificate_transparency</code></div>
+      <p class="d">We found the hole in our own method while researching it.
+        Rotation is not only <em>registering a new domain</em> — it is
+        <span class="ar">w12.mycima.movie</span> →
+        <span class="ar">w13.mycima.movie</span>, and that produces
+        <b>no WHOIS event whatsoever</b>, because the apex domain is never
+        touched. A registration monitor is structurally blind to the most common
+        rotation in the corpus. Certificate transparency is the only surface that
+        sees it: an operator cannot serve TLS without a certificate for each name,
+        and the name appears in the log <b>before the site serves anything</b>.
+        So we watch the certificates, and the drop list besides — a
+        brand-adjacent name reaching redemption is a name about to change hands.</p>
+    </div>
+    <div class="obj">
+      <div class="t">One route links brands that look unrelated<code>route_of()</code></div>
+      <p class="d">Four hosts, two separate brand families, one application:
+        <code>w12.mycima.movie/watch.php?vid=…</code>,
+        <code>larozza.living/video.php?vid=…</code>,
+        <code>larroza.baby</code>, <code>larroza.homes</code> — same script names,
+        same parameter, same fixed-width hex id. That is not one owner; it is the
+        <b>piracy-as-a-service layer</b> the MPA documents directly
+        (“off-the-shelf streaming operations”: Vidsrc, WHMCS Smarters, HydraHD).
+        Which makes the enforcement target the <em>supplier</em>: one notice to a
+        vendor removes a hundred sites, where one notice to a site removes one.
+        We keep this separate from operator attribution on purpose — a shared
+        vendor must never be allowed to look like a shared owner.</p>
+    </div>
+    <div class="obj">
+      <div class="t">The app store is the fastest path<code>parse_release()</code></div>
+      <p class="d">This corpus names its products after the platforms it pirates:
+        <b>SHAHID PLUS</b>, ALIFLIX, MTNTV, BLADEUHD, VICTV, CRYSTAL OTT,
+        STORM ONE, <span class="ar">ATLAS PR0</span>. Impersonating a registered
+        mark is actionable in a store <b>on its own merits</b> — no proof of any
+        act of infringement, no foreign jurisdiction, no takedown. Besides which,
+        an Android package id is the reversed domain the developer controlled,
+        and it is essentially never rotated, because changing it breaks every
+        install: <code>com.aflamtvmaroc.moviesdarija</code> leaks
+        <code>aflamtvmaroc.com</code>, which may have expired years ago. A version
+        sequence (<code>V4.1 → V4.1a → V10.0 → V11.0.0</code>) ties a rebrand to
+        the same developer across a full domain, package <em>and</em> template
+        rotation — which no infrastructure signal survives.</p>
+    </div>
+
+    <div class="obj">
       <div class="t">Succession is a public event<code>lineage_edge()</code></div>
       <p class="d">WeCima marketed itself as <span class="ar">بديل ماي سيما</span> —
         <i>the alternative to MyCima</i> — and absorbed EgyBest’s audience while
@@ -474,12 +518,14 @@ footer{padding:2.6rem 0 3.2rem}
       replaced by method-of-moments empirical Bayes, re-derivable by hand from one
       printed formula.</p>
     <div class="proof">
-      <span><b>141</b> unit tests</span>
-      <span><b>71</b> contract checks</span>
-      <span><b>30</b> of them refusals</span>
-      <span><b>14</b> contract sections</span>
+      <span><b>178</b> unit tests</span>
+      <span><b>82</b> contract checks</span>
+      <span><b>35</b> of them refusals</span>
+      <span><b>15</b> contract sections</span>
       <span>exit <b>0</b></span>
       <span><b>0</b> fabricated zeros</span>
+      <span><b>44</b> cited sources</span>
+      <span><b>17</b> surfaces</span>
     </div>
     <p class="warn">The refusal count is measured at runtime rather than typed into
       a summary, because a headline figure that was not observed would break the
