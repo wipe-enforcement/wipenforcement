@@ -45,7 +45,7 @@ qarin/            the measurement core (Python, standard library only)
   metrics.py      supply coverage, reappearance latency, completeness, gaps
   enforce.py      notice → outcome → reappearance → recalibration
   report.py       evidence packs and tariff quotations
-site/             the public page (single self-contained HTML file)
+index.html        the public page (single self-contained HTML file, served by Pages)
 docs/             THESIS.md · SOURCES.md · METHOD notes
 tests/            141 unit tests
 tools/            one-command contract check
@@ -165,7 +165,7 @@ infrastructure in phase one. Hostnames divide the product:
 
 | Host | Job |
 |---|---|
-| `www` | this page |
+| `www` | `index.html` — this page |
 | `method` | formulas, sources, limitations, public error log |
 | `radar` | live meters and counters |
 | `index` | quarterly methodology-transparent report |
