@@ -15,3 +15,14 @@ venv/
 vault/
 site/vault/
 *.findings.json
+
+# --- the target set is intel, not method -------------------------------------
+# A machine-readable list of watched brands, their observed TLDs, the
+# misspelling rules, combosquat words and subdomain prefixes is a description of
+# what this platform monitors. Released publicly it is worth more to the
+# operators than to the researchers: it tells them exactly which patterns are
+# watched, and every pattern NOT on the list becomes free. The public stub
+# arabic-intel.example.json travels instead, so a fresh clone runs and tests
+# pass with no target data at all.
+intel/*.json
+!intel/arabic-intel.example.json

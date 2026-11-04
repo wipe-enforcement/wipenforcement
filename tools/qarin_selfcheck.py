@@ -21,6 +21,20 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+# This tool prints Arabic, em dashes and interval brackets. On a Windows console
+# the default code page is cp1252 and every one of those characters raises
+# UnicodeEncodeError — which killed the run at the first check. The failure was
+# invisible to me for as long as I invoked the tool with PYTHONIOENCODING=utf-8
+# set in my own shell, and it is invisible to CI because Ubuntu's runner already
+# defaults to UTF-8. So the tool sets its own encoding instead of inheriting one
+# from whoever happens to be calling it: a verification script that only passes
+# when the operator remembers an environment variable has not verified anything.
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+    except (AttributeError, ValueError):
+        pass
+
 from qarin.canonical import fold_arabic, latin_root, parse_instalment, parse_offering  # noqa: E402
 from qarin.enforce import (  # noqa: E402
     Notice, NoticeState, Routed, close_loop, escalation_target, route,
@@ -37,6 +51,7 @@ from qarin.operator import Signal, cluster_offerings, signals_from_html  # noqa:
 from qarin.receipt import Receipt, ReplayRecipe, structural_fingerprint  # noqa: E402
 from qarin.report import build_pack, quote_gaps, scan_for_prohibited  # noqa: E402
 from qarin.operator import Cluster  # noqa: E402
+from qarin.intel import INTEL, load  # noqa: E402
 from qarin.rotation import (  # noqa: E402
     Recogniser, continues_sequence, fold_homoglyphs, package_to_domains,
     parse_release, route_of,
@@ -48,6 +63,19 @@ from qarin.discover import (  # noqa: E402
 
 BAR = "=" * 74
 FAILURES: list[str] = []
+
+
+def skip(what: str, why: str) -> None:
+    """Announce a check that could not run, in the same voice as one that did.
+
+    A verification tool that quietly omits a category of check and still prints
+    green is the exact failure this project exists to prevent, so skips are
+    counted and named in the verdict rather than left for a reader to infer.
+    """
+    global N_SKIPPED
+    N_SKIPPED += 1
+    SKIPPED.append(what)
+    print(f"  [SKIP] {what} — {why}")
 
 
 def section(title: str) -> None:
@@ -64,6 +92,8 @@ REFUSAL_MARKERS = ("never", "not ", "no ", "refus", "unmeasurable", "declin",
 
 N_CHECKS = 0
 N_REFUSALS = 0
+N_SKIPPED = 0
+SKIPPED: list[str] = []
 
 
 def check(label: str, ok: bool, detail: str = "") -> None:
@@ -454,26 +484,31 @@ def main() -> int:
     check("the stacked-brand shape is generated, as the source describes it",
           any(len(x.brand_tokens) >= 3 for x in pr),
           "the probe that finds the pre-registration layer")
-    obs = ("myciiima.autos", "myciiima.bond", "myciiima.boats", "myciiima.makeup",
-           "myciiima.monster")
-    cands = set(enumerate_rotation_candidates("mycima"))
-    hits = [d for d in obs if d in cands]
-    check("the rotation grammar predicts the domains actually observed",
-          len(hits) >= 4, f"{len(hits)}/5 of the documented MyCima stock: "
-          f"{hits}")
-    check("the WeCima reserve and the eegebest lookalike are both predicted",
-          any(d.startswith("weciima.") for d in enumerate_rotation_candidates("wecima"))
-          and "eegebest.com" in set(enumerate_rotation_candidates("egybest")))
-    one = brand_signal("شاهد فيلم الراهب على ماي سيما")
-    fam = brand_signal("egybest mycima wecima cima4u arabseed akwam faselhd")
-    check("one brand mention is not evidence", co_occurrence_verdict(one) == "MENTION_ONLY",
-          f"-> {one}")
-    check("a family stack in one meta block is rotation stock",
-          co_occurrence_verdict(fam) == "ROTATION_STOCK", f"-> {fam}")
-    check("succession is detectable from the document itself",
-          "بديل" in "وي سيما الجديد بديل ماي سيما"
-          and {"mycima", "wecima"} <= set(
-              brand_signal("وي سيما wecima بديل ماي سيما mycima")))
+    if INTEL.is_private:
+        obs = ("myciiima.autos", "myciiima.bond", "myciiima.boats",
+               "myciiima.makeup", "myciiima.monster")
+        cands = set(enumerate_rotation_candidates("mycima"))
+        hits = [d for d in obs if d in cands]
+        check("the rotation grammar predicts the domains actually observed",
+              len(hits) >= 4, f"{len(hits)}/5 of the documented stock: {hits}")
+        check("the reserve and the lookalike are both predicted",
+              any(d.startswith("weciima.")
+                  for d in enumerate_rotation_candidates("wecima"))
+              and "eegebest.com" in set(enumerate_rotation_candidates("egybest")))
+        one = brand_signal("شاهد فيلم الراهب على ماي سيما")
+        fam = brand_signal("egybest mycima wecima cima4u arabseed akwam faselhd")
+        check("one brand mention is not evidence",
+              co_occurrence_verdict(one) == "MENTION_ONLY", f"-> {one}")
+        check("a family stack in one meta block is rotation stock",
+              co_occurrence_verdict(fam) == "ROTATION_STOCK", f"-> {fam}")
+        check("succession is detectable from the document itself",
+              {"mycima", "wecima"} <= set(
+                  brand_signal("وي سيما wecima بديل ماي سيما mycima")))
+    else:
+        skip("grammar-against-the-record checks (5)",
+             "no private intel: these validate the rotation grammar against "
+             "recorded observations and cannot be done from the example set. "
+             "The machinery checks below still run, on the example brands.")
     print(f"    surfaces declared: {len(SURFACES)} -> {', '.join(SURFACES)}")
     check("surfaces are distinct in kind, and coverage is charged per surface",
           len(SURFACES) >= 9 and len(set(SURFACES)) == len(SURFACES))
@@ -483,18 +518,23 @@ def main() -> int:
     # control. The grammar is applied to whatever arrives, which is why this is
     # the production path and the enumerator is only a validation device.
     rec = Recogniser()
-    feed = ["myciiima.autos", "w13.mycima.movie", "mycima-official.xyz",
-            "larozza.living", "atlaspr0.net", "blog.example.com",
-            "recipes_daily.net", "weciima.tube"]
+    feed = (["myciiima.autos", "w13.alpha.example", "mycima-official.xyz",
+             "atlaspr0.net", "blog.example.com", "recipes_daily.net",
+             "weciima.tube"] if INTEL.is_private else
+            ["alphaa.example", "w13.alpha.example", "alpha-official.xyz",
+             "beetav.example", "blog.example.com", "recipes_daily.net",
+             "gammas.example"])
     hits = list(rec.scan(feed, source="certificate_transparency"))
     for h in hits:
         print(f"    {h.name:22s} {h.verdict:15s} {h.brand_id:8s} {h.rule}"
               + (f" combo={h.combo}" if h.combo else "")
               + (f" sub={h.subdomain}" if h.subdomain else ""))
-    check("the recorded rotation stock is recognised from a mixed feed",
-          {"myciiima.autos", "weciima.tube", "mycima-official.xyz",
-           "w13.mycima.movie", "larozza.living", "atlaspr0.net"}
-          <= {h.name for h in hits}, f"{len(hits)} of {len(feed)} names")
+    want = ({"myciiima.autos", "weciima.tube", "mycima-official.xyz",
+             "w13.alpha.example", "atlaspr0.net"} if INTEL.is_private else
+            {"alphaa.example", "alpha-official.xyz", "w13.alpha.example",
+             "beetav.example", "gammas.example"})
+    check("the rotation stock is recognised from a mixed feed",
+          want <= {h.name for h in hits}, f"{len(hits)} of {len(feed)} names")
     check("unrelated names produce no hit rather than a weak one",
           not any(h.name in ("blog.example.com", "recipes_daily.net") for h in hits),
           "a None is not a negative finding, and counting it as one would "
@@ -556,7 +596,13 @@ def main() -> int:
             print("    - " + f)
         print("\n  Do not publish a number from this build.")
         return 1
-    print(f"  ALL 15 CONTRACT SECTIONS PASSED — {N_CHECKS} checks, of which "
+    if N_SKIPPED:
+        print(f"  {N_SKIPPED} check(s) SKIPPED (not run, not failed):")
+        for w in SKIPPED:
+            print("    - " + w)
+        print()
+    print(f"  ALL 15 CONTRACT SECTIONS PASSED — {N_CHECKS} checks, "
+          f"{N_SKIPPED} skipped, of which "
           f"{N_REFUSALS} are refusals — {res.testsRun} UNIT TESTS GREEN")
     print("\n  Every refusal above is a feature: in each of those situations the")
     print("  instrument declines to produce a number or a verdict, and in none of")

@@ -15,7 +15,7 @@ control, and ask of each incoming name only whether the grammar explains it.
 in a CT log the moment a certificate is issued for it, which is *before* the site
 serves anything and independently of whether anything was newly registered. That
 closes the one rotation technique the WHOIS feed cannot see at all: subdomain
-rotation. ``w12.mycima.movie`` → ``w13.mycima.movie`` produces no registration
+rotation. ``w<n>.<brand>.<tld>`` → ``w<n+1>.<brand>.<tld>`` produces no registration
 event whatsoever, because the apex domain was never touched — the operator only
 needs a certificate, and there is no way to serve TLS without one.
 
@@ -35,10 +35,11 @@ import re
 from dataclasses import dataclass
 
 from .discover import (
+    Brand,
+    BrandRegistry,
     COMBO_WORDS,
     HOMOGLYPHS,
     SUBDOMAIN_PREFIXES,
-    BrandRegistry,
     _ROTATION_RULES,
 )
 
@@ -211,7 +212,23 @@ class Recogniser:
     validation, and this is the thing that runs at feed volume.
     """
 
-    def __init__(self, reg: BrandRegistry | None = None) -> None:
+    def __init__(self, reg: "BrandRegistry | None" = None, *,
+                 intel: object | None = None) -> None:
+        """``intel`` builds the brand set from a specific :class:`qarin.intel.Intel`.
+
+        Needed because the test suite has to run the *same* machinery against two
+        different target sets — the private intel and the public example — and a
+        constructor that only accepted a registry would force the tests to reach
+        into module globals to do it. Reading the globals instead would make the
+        suite depend on which file happens to be on disk, and a test that passes
+        only on one machine is testing the machine.
+        """
+        if reg is None and intel is not None:
+            reg = BrandRegistry(Brand(
+                id=b.id, names=b.names, latin=b.latin,
+                successor_of=b.successor_of, observed_tlds=b.observed_tlds,
+                peak_monthly_visits=b.peak_monthly_visits, source=b.source,
+                status=b.status) for b in intel.brands)
         self.reg = reg or BrandRegistry()
         #: brand id -> {folded latin spellings}
         self._want: dict[str, set[str]] = {
@@ -234,7 +251,7 @@ class Recogniser:
         tld = parts[-1]
 
         # Strip a known subdomain prefix before measuring distance, so
-        # `w12.mycima.movie` is judged on `mycima` and the prefix is reported
+        # ``w<n>.<brand>.<tld>`` is judged on the brand label and the prefix is reported
         # separately. Without this, subdomain rotation reads as a four-edit
         # distance and falls out of the bands entirely — the operator's most
         # frequent move would be the one the grammar cannot see.
@@ -328,10 +345,8 @@ class Recogniser:
 # ==========================================================================
 #: Application routes observed across *different* brand families in one pass:
 #:
-#:     w12.mycima.movie/watch.php?vid=14dbe5ecb
-#:     larozza.living/video.php?vid=3d9e04fd3
-#:     larroza.baby/video.php?vid=a70425fc4
-#:     larroza.homes/video.php?vid=bde8c70bd
+#:     w<n>.<brand>.<tld>/watch.php?vid=<hex9>
+#:     w<n>.<brand>.<tld>/video.php?vid=<hex9>      (four hosts, two brand families)
 #:
 #: Same script names, same query parameter, same fixed-width hex id shape, across
 #: two apparently unrelated brands. That is not coincidence and it is not proof

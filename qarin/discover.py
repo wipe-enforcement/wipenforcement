@@ -69,6 +69,7 @@ from dataclasses import dataclass, field
 from typing import Iterable, Mapping, Sequence
 
 from .canonical import fold_arabic, fold_latin
+from .intel import INTEL as _INTEL, INTEL_STATUS, load as load_intel
 
 # ==========================================================================
 # 1. The vocabulary
@@ -81,106 +82,19 @@ from .canonical import fold_arabic, fold_latin
 #: "اتش دي" is HD, "بلوراي" is BluRay, "بوكس اوفيس" is box office. A parser that
 #: looks for the Arabic translation of these words finds nothing, because nobody
 #: uses it.
-TRANSLIT_TECH: Mapping[str, str] = {
-    "اتش دي": "HD",
-    "بلوراي": "BluRay",
-    "بلو راي": "BluRay",
-    "بروراى": "BluRay",
-    "بوكس اوفيس": "box office",
-    "دي في دي": "DVD",
-    "دي‌في‌دي": "DVD",
-    "اون لاين": "online",
-    "أون لاين": "online",
-    "اونلين": "online",
-    "أونلين": "online",
-    "ستريم": "stream",
-    "ستريمنج": "streaming",
-    "سيرفر": "server",
-    "سيرفرات": "servers",
-    "تورنت": "torrent",
-    "تيليجرام": "telegram",
-    "تليجرام": "telegram",
-    "واتس اب": "whatsapp",
-    "واتساب": "whatsapp",
-    "فايبر": "viber",
-    "كيك": "kik",
-    "بيست": "best",              # as in egybest
-    "سيد": "seed",               # as in arabseed
-    "اكوام": "akwam",
-    "قصة عشق": "qossam eleshq",
-    "ماي سيما": "mycima",
-    "وي سيما": "wecima",
-    "سيما كلوب": "cimaclub",
-    "سيما 4u": "cima4u",
-    "سيما4يو": "cima4u",
-    "دراما كافيه": "dramacafe",
-    "فاصل اتش دي": "faselhd",
-    "فاصل بلس": "faselplus",
-    "لا روزا": "laroza",
-    "لاروزا": "laroza",
-    "اراب ليونز": "arablions",
-    "شاهد فور يو": "shahid4u",
-    "اكيجي بست": "egybest",
-    "ايجي بست": "egybest",
-    "ايجي شير": "egyshare",
-    "ايجي ديد": "egydead",
-    "افلامنا": "aflamna",
-    "افلامكو": "aflamko",
-    "اكوا م": "akwam",
-    "سينما كوم": "cinemakom",
-    "اهواك": "ahewak",
-    "ماي سيما بلس": "mycimaplus",
-    "برستيج": "prestige",
-    "وقت الافلام": "waqt-al-aflam",
-    "اقول": "aqool",
-    "فيديو لاروزا": "videolaroza",
-    "هي تي في": "hitv",
-    "اتش دي بو بكورن": "hdpopcorns",
-    "شوف افلام": "shoofaflam",
-    "وياك": "wyak",
-}
+#: Loaded from intel. Tuned per market alongside the target set, because the
+#: transliterated-technical vocabulary is dialect- and region-specific.
+TRANSLIT_TECH: Mapping[str, str] = _INTEL.translit_tech
+
 
 #: Arabic functional vocabulary, grouped by what the word is doing in the string.
 #: Derived from observed page titles and meta blocks, not from a dictionary.
-LEXICON: Mapping[str, tuple[str, ...]] = {
-    # the action verbs — "watch and download" is one unit in the wild
-    "watch": ("مشاهدة", "شاهد", "مشاهدة اون لاين", "بث", "تدفق", "دفق",
-              "شاهد مباشرة", "بث مباشر", "مباشر", "لايف"),
-    "download": ("تحميل", "حمل", "نزل", "تنزيل", "تحميل مباشر", "روابط تحميل"),
-    "free": ("مجانا", "مجاني", "بالمجان", "بدون اشتراك", "مفتوح", "free"),
-    "translated": ("مترجم", "مترجمة", "مترجمين", "ترجمة عربية", "العنوان الفرعي",
-                   "ซับ", "سبس", "subbed"),
-    "dubbed": ("مدبلج", "مدبلجة", "مدهبلج", "دبلجة", "dubbed", "dub"),
-    "complete": ("كامل", "كاملة", "كامله", "بالكامل", "كاملا", "full"),
-    "quality": ("جودة", "دقة", "hd", "اتش دي", "1080p", "720p", "480p", "4k",
-                "uhd", "بلوراي", "bluray", "web-dl", "webdl", "webrip", "ts",
-                "cam", "screener", "ماستر", "نسخة"),
-    "format": ("دي في دي", "dvd", "mkv", "avi", "mp4", "x264", "x265", "h264",
-               "h265", "aac", "ac3", "5.1", "2160p", "1080i"),
-    "unit": ("فيلم", "افلام", "أفلام", "مسلسل", "مسلسلات", "حلقة", "حلقات",
-             "برنامج", "مسرحية", "انمي", "وثائقي", "وثائزية", "كارتون",
-             "مباراة", "بطولة", "اوبريت", "حفل", "بودكاست"),
-    "season_word": ("الموسم", "موسم", "جزء", "الجزء", "ستيسون", "سيزون"),
-    "year": ("2026", "2025", "2024", "2023", "2022", "2021", "2020"),
-    "recency": ("الجديد", "جديدا", "2026", "اليوم", "الان", "الآن", "حديث",
-                "الحلقة الاخيرة", "الاخيرة", "اخيرا"),
-    "platform_noun": ("موقع", "مواقع", "قناة", "قنوات", "تطبيق", "ابلكيشن",
-                      "سيرفر", "بوت", "روبوت"),
-}
+LEXICON: Mapping[str, tuple[str, ...]] = _INTEL.lexicon
+
 
 #: Arabic-script words that mean a thing exists on a *surface* rather than a
 #: work, and are therefore discovery anchors rather than noise.
-SURFACE_HINTS: Mapping[str, str] = {
-    "تليجرام": "telegram", "تيليجرام": "telegram", "telegram": "telegram",
-    "m3u": "iptv_manifest", "ام ثري يو": "iptv_manifest", "iptv": "iptv_manifest",
-    "آي بي تي في": "iptv_manifest", "بانل": "iptv_manifest", "سيرفرات": "iptv_manifest",
-    "تورنت": "torrent_swarm", "torrent": "torrent_swarm", "magnet": "torrent_swarm",
-    "apk": "app_store", "اندرويد": "app_store", "android": "app_store",
-    "واتساب": "messaging", "واتس اب": "messaging",
-    "يوتيوب": "ugc", "youtube": "ugc", "تيك توك": "ugc", "tiktok": "ugc",
-    "فيسبوك": "ugc", "facebook": "ugc", "اكس": "ugc", "تويتر": "ugc",
-    "مباشر": "search_index", "حصري": "search_index",
-}
+SURFACE_HINTS: Mapping[str, str] = _INTEL.surface_hints
 
 
 def arabic_technical_terms(text: str) -> set[str]:
@@ -221,123 +135,28 @@ class Brand:
     status: str = "ACTIVE"                  # ACTIVE | TAKEDOWN | ROTATED
 
 
-#: Documented brands, with the citation that establishes each one. Visits figures
-#: are third-party estimates from rights-holder filings, kept here as *scale
-#: context* and never as a measurement of this platform's own.
-KNOWN_BRANDS: tuple[Brand, ...] = (
-    Brand("mycima", ("ماي سيما", "مايسما", "mycima"), ("mycima", "myciima", "mycyma"),
-          observed_tlds=("com", "codes", "autos", "bond", "boats", "makeup", "monster"),
-          peak_monthly_visits=50_000_000, status="ROTATED",
-          source="beIN/4K USTR submission USTR-2024-0013-0037; TorrentFreak 2023-03"),
-    Brand("wecima", ("وي سيما", "ويسما", "wecima"), ("wecima", "weciima"),
-          successor_of=("mycima", "egybest"),
-          observed_tlds=("tube", "com"), peak_monthly_visits=18_000_000,
-          source="beIN/4K USTR submission (WeCima successor to MyCima, 18M)"),
-    Brand("egybest", ("ايجي بست", "إيجي بست", "ايجي بيست"), ("egybest", "eegebest",
-                                                             "egbest", "eegbest"),
-          observed_tlds=("com", "net", "org"), peak_monthly_visits=None,
-          status="ROTATED", source="ACE/Egypt takedown, succeeded by Egybest revival"),
-    Brand("shahid4u", ("شاهد فور يو", "شهد فور يو", "شاهد4يو"), ("shahed4u", "shahid4u",
-                                                                 "shaheed4u"),
-          observed_tlds=("com", "tv", "net"), peak_monthly_visits=155_000_000,
-          status="TAKEDOWN",
-          source="ACE + Egyptian authorities, 118+ domains, 68,000 series / "
-                 "18,700 films (alliance4creativity, 2024)"),
-    Brand("laroza", ("لاروزا", "لا روزا", "فيديو لاروزا"), ("laroza", "videolaroza",
-                                                           "larozia"),
-          observed_tlds=("tv", "quest", "homes", "cyou", "plus"),
-          peak_monthly_visits=7_000_000,
-          source="beIN/4K USTR submission (Laroza 7M+ monthly visits)"),
-    Brand("faselhd", ("فاصل اتش دي", "فاصل بلس", "فاصل"), ("faselhd", "fasel",
-                                                           "faselplus"),
-          observed_tlds=("com", "tv", "plus"), peak_monthly_visits=30_000_000,
-          source="beIN/4K USTR submission (Fasel/Faselplus 30M visits)"),
-    Brand("cima4u", ("سيما 4u", "سيما4يو", "سيما كلوب"), ("cima4u", "cimaclub",
-                                                         "cima4all"),
-          observed_tlds=("com", "club", "pw"),
-          source="beIN/4K USTR submission; ACE/Egypt Livehd7+Cima4U series"),
-    Brand("arabseed", ("عرب سيد", "عربى سيد", "عرب سيد نت"), ("arabseed", "arabseed-net"),
-          observed_tlds=("com", "shop", "net")),
-    Brand("akwam", ("اكوام", "أكوام"), ("akwam", "akwwam"), observed_tlds=("live", "app")),
-    Brand("qossam", ("قصة عشق", "قصص عشق"), ("qossam", "eleshq", "qasmelleshq"),
-          observed_tlds=("eu", "life", "one")),
-    Brand("egydead", ("ايجي ديد", "إيجي ديد"), ("egydead", "egydead-exe")),
-    Brand("dramacafe", ("دراما كافيه", "دراماكافيه"), ("dramacafe", "drama-cafe")),
-    Brand("livehd7", ("لايف اتش دي 7", "لايف7"), ("livehd7", "live-hd7"),
-          peak_monthly_visits=None,
-          source="ACE + Egyptian authorities, live-sports ring, 85+ domains (2024-10-31)"),
-    # --- illegal IPTV services profiled in the MPA's notorious-markets
-    # --- submission. They belong in the same registry as the web brands for a
-    # specific reason: they are the same operators at a different layer, and the
-    # panel naming ("ATLAS PR0", "CRYSTAL OTT", "STORM ONE") is the form that
-    # leaks into the Telegram APK posts, where the web brands do not.
-    Brand("atlaspro", ("اطلس برو", "أطلس برو"), ("atlaspro", "atlas-pro", "atlaspr0"),
-          source="MPA submission to USTR public consultation (suspected Algerian operator)"),
-    Brand("apollo", ("أبولو", "ابولو تي في"), ("apollotv", "apollo-group-tv",
-                                              "apollo"),
-          source="MPA submission (Apollo Group TV)"),
-    Brand("geniptv", ("جين اي بي تي في",), ("geniptv", "gen-iptv"),
-          source="MPA submission (GenIPTV)"),
-    Brand("gogoiptv", ("جوجو", "اوركا"), ("gogoiptv", "orca-iptv", "orca"),
-          source="MPA submission (Gogo/Orca IPTV, Algeria)"),
-    Brand("kemolemo", ("كيمو ليمو",), ("kemolemo", "kemo-lemo"),
-          source="MPA submission (Kemo Lemo IPTV, UAE / Dubai Police investigation)"),
-    Brand("evpad", ("إي فاد",), ("evpad",),
-          source="MPA submission (EVPad)"),
-    Brand("smarters", ("سمارترز",), ("smarters", "whmcs-smarters", "smart-ott"),
-          source="MPA submission: WHMCS Smarters, named as off-the-shelf pirate "
-                 "infrastructure rather than an operator"),
+#: The target set and the rotation vocabulary. Both are **intel, not
+#: method**: a machine-readable list of who is being watched, with their observed
+#: TLDs, misspelling rules, combosquat words and subdomain prefixes, is a
+#: description of what this platform monitors. Released publicly it is worth more
+#: to the operators than to the researchers, because every pattern absent from
+#: the list becomes free. Loaded from the gitignored intel file — see
+#: :mod:`qarin.intel` for the reasoning and :data:`qarin.intel.INTEL_STATUS` for
+#: the labelling rule that keeps an example-set figure from being read as a
+#: market measurement.
+KNOWN_BRANDS: tuple[Brand, ...] = tuple(
+    Brand(id=b.id, names=b.names, latin=b.latin, successor_of=b.successor_of,
+          observed_tlds=b.observed_tlds, peak_monthly_visits=b.peak_monthly_visits,
+          source=b.source, status=b.status)
+    for b in _INTEL.brands
 )
 
-
-#: The cheap new gTLDs observed as rotation stock. This is a *fingerprint*, and
-#: it is the most useful single fact in this section: an operator buying
-#: longevity buys it here, in bulk, in advance, and a new registration in this
-#: set containing a known brand token is worth watching before it resolves to
-#: anything at all.
-ROTATION_TLDS: tuple[str, ...] = (
-    "autos", "bond", "boats", "makeup", "monster", "click", "link", "cyou",
-    "shop", "live", "tube", "pw", "icu", "beauty", "faith", "win", "biz",
-    "top", "xyz", "site", "online", "store", "tech", "one", "life", "eu",
-    "codes", "pvt", "cyou", "sbs", "ltd", "quest", "homes", "plus", "exe",
-    # Observed on Arabic film networks in the 2026-11-04 source pass, all
-    # novelty or low-cost gTLDs. The set itself is the fingerprint: an operator
-    # buying longevity buys it here and nowhere else, which is what lets the
-    # recogniser in rotation.py treat a name as stock on two independent grounds
-    # (brand edit + TLD family) rather than on resemblance alone.
-    "movie", "living", "baby", "camera", "download", "watch", "play", "stream",
-    "fyi", "info", "me", "co", "io", "biz",
-)
-
-#: Vowel-doubling and substitution rules that generate the near-identical spellings
-#: operators register as backup stock. Derived from the observed pairs
-#: (mycima→myciiima, egybest→eegebest, wecima→weciima), i.e. this grammar is
-#: induced from evidence, not invented.
-_ROTATION_RULES: tuple[tuple[str, str], ...] = (
-    ("a", "aa"), ("i", "ii"), ("e", "ee"), ("o", "oo"), ("u", "uu"),
-    ("z", "zz"), ("s", "ss"), ("t", "tt"), ("l", "ll"), ("m", "mm"),
-    ("i", "y"), ("y", "i"), ("b", "p"), ("p", "b"), ("k", "c"), ("c", "k"),
-    ("s", "z"), ("z", "s"), ("v", "f"), ("f", "v"), ("ai", "ey"), ("ea", "ee"),
-    ("ph", "f"), ("ck", "c"), ("gh", "g"),
-)
-
-#: Combosquatting words: a documented family distinct from typosquatting, and
-#: more productive in this corpus. `brand-official.com` and `brand-support.com`
-#: imply a relationship that does not exist, which is a brand problem rather than
-#: a typo problem. The same construction appears in the Arabic app layer as
-#: "SHAHID PLUS" and "ALIFLIX" — a legal mark with a suffix.
-COMBO_WORDS: tuple[str, ...] = (
-    "official", "vip", "pro", "plus", "premium", "support", "login", "alt",
-    "alternative", "new", "latest", "app", "tv", "online", "stream", "hd",
-    "now", "live", "secure", "web", "24",
-)
-
-#: Confusable glyphs. Observed in this corpus as "ATLAS PR0" for Atlas Pro, and
-#: the reason brand comparison has to fold before it matches: at a glance a
-#: Cyrillic а and a Latin a are the same character to a user, and a string
-#: comparison sees two unrelated products. Folded one-directionally, in
-#: :mod:`qarin.rotation` — generating homoglyphs from a clean brand would explode
-#: the candidate space and buy nothing.
+#: Confusable glyphs. Generic typosquatting literature, NOT intel: the table says
+#: nothing about who is being watched, only that a Cyrillic а and a Latin a are
+#: the same character to a user scanning a URL at speed. It stays in the code
+#: because publishing it costs an operator nothing, and withholding it would
+#: simply break the fold for anyone running the engine on their own target set.
+#: The line between method and intel is drawn here, not asserted in a document.
 HOMOGLYPHS: dict[str, str] = {
     "0": "o", "1": "l", "3": "e", "5": "s", "7": "t", "@": "a", "$": "s",
     "а": "a", "е": "e", "о": "o", "р": "p",
@@ -345,17 +164,10 @@ HOMOGLYPHS: dict[str, str] = {
     "і": "i", "һ": "h",
 }
 
-#: Subdomain prefixes observed on the same networks in one pass:
-#: w12.mycima.movie, ww.elaphjournal.com, s.sanaa-tv.com. Documented as a
-#: blacklist-evasion technique, and structurally invisible to any monitor that
-#: watches registrable domains only: the apex is never touched, so there is no
-#: WHOIS event. Certificate transparency is the only surface that sees it,
-#: because the operator cannot serve TLS without a certificate for each name.
-SUBDOMAIN_PREFIXES: tuple[str, ...] = (
-    "w", "ww", "www", "w1", "w2", "w3", "w5", "w8", "w10", "w12", "m", "s",
-    "en", "ar", "vip", "app", "cdn", "static", "img", "api", "live", "tv",
-    "go", "dl", "d", "v", "p", "amp", "mobi", "new", "alt",
-)
+ROTATION_TLDS: tuple[str, ...] = _INTEL.rotation_tlds
+_ROTATION_RULES: tuple[tuple[str, str], ...] = _INTEL.rotation_rules
+COMBO_WORDS: tuple[str, ...] = _INTEL.combo_words
+SUBDOMAIN_PREFIXES: tuple[str, ...] = _INTEL.subdomain_prefixes
 
 
 @dataclass

@@ -1,0 +1,188 @@
+{
+ "_readme": [
+  "PUBLIC EXAMPLE intel. Same shape as the real file, no real targets.",
+  "The real intel/arabic-intel.json is gitignored: a machine-readable list of",
+  "brands, TLDs, misspelling rules and route signatures is a description of",
+  "what this platform monitors, and released publicly it is worth more to the",
+  "operators than to the researchers — every pattern NOT on the list becomes",
+  "free. Copy this file to arabic-intel.json and fill it in to run locally.",
+  "Figures computed against this stub are not market measurements; every",
+  "report labels its intel source so the two cannot be confused."
+ ],
+ "brands": [
+  {
+   "id": "alpha",
+   "names": [
+    "ألفا"
+   ],
+   "latin": [
+    "alpha"
+   ],
+   "successor_of": [],
+   "observed_tlds": [
+    "example",
+    "com"
+   ],
+   "peak_monthly_visits": null,
+   "source": "example, no citation",
+   "status": "ACTIVE"
+  },
+  {
+   "id": "betav",
+   "names": [
+    "بيتا"
+   ],
+   "latin": [
+    "betav"
+   ],
+   "successor_of": [
+    "alpha"
+   ],
+   "observed_tlds": [
+    "xyz",
+    "net"
+   ],
+   "peak_monthly_visits": null,
+   "source": "example, no citation",
+   "status": "ACTIVE"
+  },
+  {
+   "id": "gammas",
+   "names": [
+    "جاما"
+   ],
+   "latin": [
+    "gammas"
+   ],
+   "successor_of": [],
+   "observed_tlds": [
+    "live"
+   ],
+   "peak_monthly_visits": null,
+   "source": "example, no citation",
+   "status": "ACTIVE"
+  }
+ ],
+ "rotation_tlds": [
+  "com",
+  "net",
+  "xyz",
+  "live"
+ ],
+ "rotation_rules": [
+  [
+   "a",
+   "aa"
+  ],
+  [
+   "e",
+   "ee"
+  ],
+  [
+   "i",
+   "ii"
+  ],
+  [
+   "s",
+   "ss"
+  ]
+ ],
+ "combo_words": [
+  "official",
+  "vip",
+  "pro",
+  "plus"
+ ],
+ "subdomain_prefixes": [
+  "w",
+  "ww",
+  "www",
+  "m",
+  "s"
+ ],
+ "routes": [
+  [
+   "(watch|video)\\.php\\?vid=[0-9a-f]{8,12}",
+   "paas_player",
+   "supplier"
+  ]
+ ],
+ "translit_tech": {
+  "اتش دي": "HD",
+  "بلوراي": "BluRay",
+  "اون لاين": "online"
+ },
+ "lexicon": {
+  "watch": [
+   "مشاهدة",
+   "شاهد",
+   "بث"
+  ],
+  "download": [
+   "تحميل",
+   "تنزيل"
+  ],
+  "free": [
+   "مجانا",
+   "مجاني"
+  ],
+  "translated": [
+   "مترجم",
+   "مترجمة"
+  ],
+  "dubbed": [
+   "مدبلج",
+   "مدبلجة"
+  ],
+  "complete": [
+   "كامل",
+   "كاملة"
+  ],
+  "quality": [
+   "hd",
+   "1080p",
+   "720p",
+   "اتش دي"
+  ],
+  "format": [
+   "دي في دي",
+   "dvd",
+   "mp4"
+  ],
+  "unit": [
+   "فيلم",
+   "افلام",
+   "مسلسل",
+   "حلقة"
+  ],
+  "season_word": [
+   "الموسم",
+   "موسم",
+   "جزء"
+  ],
+  "year": [
+   "2026",
+   "2025",
+   "2024"
+  ],
+  "recency": [
+   "الجديد",
+   "اليوم",
+   "الان"
+  ],
+  "platform_noun": [
+   "موقع",
+   "قناة",
+   "تطبيق"
+  ]
+ },
+ "surface_hints": {
+  "تليجرام": "telegram",
+  "m3u": "iptv_manifest",
+  "تورنت": "torrent_swarm",
+  "apk": "app_store"
+ },
+ "apk_platforms": {
+  "alpha": "Alpha (example platform)"
+ }
+}
