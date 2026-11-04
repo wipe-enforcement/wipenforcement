@@ -19,6 +19,8 @@ Modules, in the order the data flows:
 - :mod:`qarin.canonical` — Arabic and Latin entity resolution, including the
   episode/season grammar that is the real bottleneck in this ecosystem
 - :mod:`qarin.receipt`   — a capture that is born admissible and replayable
+- :mod:`qarin.rotation`  — the recogniser: classifies names arriving from
+  certificate-transparency and drop feeds, route signatures, and the APK layer
 - :mod:`qarin.ledger`    — append-only Merkle chain, anchorable externally
 - :mod:`qarin.operator`  — IDF-weighted infrastructure clustering
 - :mod:`qarin.metrics`   — coverage, latency, completeness, availability gap
@@ -50,6 +52,17 @@ from .discover import (
     plan,
 )
 from .receipt import Receipt, ReplayRecipe, structural_fingerprint
+from .rotation import (
+    Hit,
+    Recogniser,
+    Release,
+    Version,
+    continues_sequence,
+    fold_homoglyphs,
+    package_to_domains,
+    parse_release,
+    route_of,
+)
 from .ledger import Ledger, LedgerError
 from .operator import Cluster, Signal, attribute, cluster_offerings
 from .metrics import (
@@ -71,6 +84,8 @@ __all__ = [
     "Receipt", "ReplayRecipe", "structural_fingerprint",
     "Ledger", "LedgerError",
     "Signal", "Cluster", "attribute", "cluster_offerings",
+    "Recogniser", "Hit", "Release", "Version", "fold_homoglyphs", "route_of",
+    "parse_release", "package_to_domains", "continues_sequence",
     "Appearance", "Coverage", "DetectorSpan", "supply_coverage",
     "reappearance_latency", "catalog_completeness", "availability_gap",
 ]

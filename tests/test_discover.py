@@ -80,8 +80,22 @@ class TestRotationGrammar(unittest.TestCase):
         self.assertEqual([], enumerate_rotation_candidates("no-such-brand"))
 
     def test_max_tlds_bounds_the_output(self):
-        self.assertLessEqual(len(enumerate_rotation_candidates("mycima", max_tlds=4)),
-                             4 * 12)
+        """The bound is structural, not a number to keep re-tuning.
+
+        An earlier version asserted ``<= 4 * 12``, which encoded a stem count that
+        moved the moment the rotation rules were widened — and a test that fails
+        when the grammar gets *better* is measuring the fixture, not the code.
+        What actually matters is that ``max_tlds`` caps the TLD axis, so the
+        output is an exact multiple of the stem count and grows linearly in
+        ``max_tlds``.
+        """
+        from qarin.discover import _stems, BrandRegistry as _BR
+        stems = len(_stems(_BR().brands["mycima"]))
+        n4 = len(enumerate_rotation_candidates("mycima", max_tlds=4))
+        n8 = len(enumerate_rotation_candidates("mycima", max_tlds=8))
+        self.assertEqual(4 * stems, n4, f"expected {stems} stems")
+        self.assertEqual(8 * stems, n8)
+        self.assertGreater(n8, n4)
 
     def test_rotation_tld_set_contains_the_observed_ones(self):
         for tld in ("autos", "bond", "boats", "makeup", "monster", "tube", "codes"):

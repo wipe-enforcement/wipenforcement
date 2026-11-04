@@ -266,6 +266,27 @@ KNOWN_BRANDS: tuple[Brand, ...] = (
     Brand("livehd7", ("لايف اتش دي 7", "لايف7"), ("livehd7", "live-hd7"),
           peak_monthly_visits=None,
           source="ACE + Egyptian authorities, live-sports ring, 85+ domains (2024-10-31)"),
+    # --- illegal IPTV services profiled in the MPA's notorious-markets
+    # --- submission. They belong in the same registry as the web brands for a
+    # specific reason: they are the same operators at a different layer, and the
+    # panel naming ("ATLAS PR0", "CRYSTAL OTT", "STORM ONE") is the form that
+    # leaks into the Telegram APK posts, where the web brands do not.
+    Brand("atlaspro", ("اطلس برو", "أطلس برو"), ("atlaspro", "atlas-pro", "atlaspr0"),
+          source="MPA submission to USTR public consultation (suspected Algerian operator)"),
+    Brand("apollo", ("أبولو", "ابولو تي في"), ("apollotv", "apollo-group-tv",
+                                              "apollo"),
+          source="MPA submission (Apollo Group TV)"),
+    Brand("geniptv", ("جين اي بي تي في",), ("geniptv", "gen-iptv"),
+          source="MPA submission (GenIPTV)"),
+    Brand("gogoiptv", ("جوجو", "اوركا"), ("gogoiptv", "orca-iptv", "orca"),
+          source="MPA submission (Gogo/Orca IPTV, Algeria)"),
+    Brand("kemolemo", ("كيمو ليمو",), ("kemolemo", "kemo-lemo"),
+          source="MPA submission (Kemo Lemo IPTV, UAE / Dubai Police investigation)"),
+    Brand("evpad", ("إي فاد",), ("evpad",),
+          source="MPA submission (EVPad)"),
+    Brand("smarters", ("سمارترز",), ("smarters", "whmcs-smarters", "smart-ott"),
+          source="MPA submission: WHMCS Smarters, named as off-the-shelf pirate "
+                 "infrastructure rather than an operator"),
 )
 
 
@@ -279,6 +300,13 @@ ROTATION_TLDS: tuple[str, ...] = (
     "shop", "live", "tube", "pw", "icu", "beauty", "faith", "win", "biz",
     "top", "xyz", "site", "online", "store", "tech", "one", "life", "eu",
     "codes", "pvt", "cyou", "sbs", "ltd", "quest", "homes", "plus", "exe",
+    # Observed on Arabic film networks in the 2026-11-04 source pass, all
+    # novelty or low-cost gTLDs. The set itself is the fingerprint: an operator
+    # buying longevity buys it here and nowhere else, which is what lets the
+    # recogniser in rotation.py treat a name as stock on two independent grounds
+    # (brand edit + TLD family) rather than on resemblance alone.
+    "movie", "living", "baby", "camera", "download", "watch", "play", "stream",
+    "fyi", "info", "me", "co", "io", "biz",
 )
 
 #: Vowel-doubling and substitution rules that generate the near-identical spellings
@@ -286,9 +314,47 @@ ROTATION_TLDS: tuple[str, ...] = (
 #: (mycima→myciiima, egybest→eegebest, wecima→weciima), i.e. this grammar is
 #: induced from evidence, not invented.
 _ROTATION_RULES: tuple[tuple[str, str], ...] = (
-    ("a", "aa"), ("i", "ii"), ("i", "y"), ("e", "ee"), ("o", "ou"),
-    ("u", "oo"), ("b", "p"), ("k", "c"), ("c", "k"), ("s", "z"),
-    ("v", "f"), ("ai", "ey"), ("ea", "ee"),
+    ("a", "aa"), ("i", "ii"), ("e", "ee"), ("o", "oo"), ("u", "uu"),
+    ("z", "zz"), ("s", "ss"), ("t", "tt"), ("l", "ll"), ("m", "mm"),
+    ("i", "y"), ("y", "i"), ("b", "p"), ("p", "b"), ("k", "c"), ("c", "k"),
+    ("s", "z"), ("z", "s"), ("v", "f"), ("f", "v"), ("ai", "ey"), ("ea", "ee"),
+    ("ph", "f"), ("ck", "c"), ("gh", "g"),
+)
+
+#: Combosquatting words: a documented family distinct from typosquatting, and
+#: more productive in this corpus. `brand-official.com` and `brand-support.com`
+#: imply a relationship that does not exist, which is a brand problem rather than
+#: a typo problem. The same construction appears in the Arabic app layer as
+#: "SHAHID PLUS" and "ALIFLIX" — a legal mark with a suffix.
+COMBO_WORDS: tuple[str, ...] = (
+    "official", "vip", "pro", "plus", "premium", "support", "login", "alt",
+    "alternative", "new", "latest", "app", "tv", "online", "stream", "hd",
+    "now", "live", "secure", "web", "24",
+)
+
+#: Confusable glyphs. Observed in this corpus as "ATLAS PR0" for Atlas Pro, and
+#: the reason brand comparison has to fold before it matches: at a glance a
+#: Cyrillic а and a Latin a are the same character to a user, and a string
+#: comparison sees two unrelated products. Folded one-directionally, in
+#: :mod:`qarin.rotation` — generating homoglyphs from a clean brand would explode
+#: the candidate space and buy nothing.
+HOMOGLYPHS: dict[str, str] = {
+    "0": "o", "1": "l", "3": "e", "5": "s", "7": "t", "@": "a", "$": "s",
+    "а": "a", "е": "e", "о": "o", "р": "p",
+    "с": "c", "х": "x", "у": "y", "к": "k",
+    "і": "i", "һ": "h",
+}
+
+#: Subdomain prefixes observed on the same networks in one pass:
+#: w12.mycima.movie, ww.elaphjournal.com, s.sanaa-tv.com. Documented as a
+#: blacklist-evasion technique, and structurally invisible to any monitor that
+#: watches registrable domains only: the apex is never touched, so there is no
+#: WHOIS event. Certificate transparency is the only surface that sees it,
+#: because the operator cannot serve TLS without a certificate for each name.
+SUBDOMAIN_PREFIXES: tuple[str, ...] = (
+    "w", "ww", "www", "w1", "w2", "w3", "w5", "w8", "w10", "w12", "m", "s",
+    "en", "ar", "vip", "app", "cdn", "static", "img", "api", "live", "tv",
+    "go", "dl", "d", "v", "p", "amp", "mobi", "new", "alt",
 )
 
 
@@ -325,6 +391,29 @@ class BrandRegistry:
         return b.successor_of if b else ()
 
 
+def _stems(brand: "Brand") -> set[str]:
+    """Every near-identical spelling of a brand's Latin forms.
+
+    Doubling and substitution from the recorded grammar, plus omission and
+    transposition — the two registration typos a user makes while already
+    intending to visit the brand, which makes them the cheapest stock there is.
+    Shared with :mod:`qarin.rotation` so the enumerator that *validates* the
+    grammar and the recogniser that *applies* it can never drift apart: two
+    copies of a rule set is how a validation pass starts certifying a grammar
+    the production path does not implement.
+    """
+    out: set[str] = set(brand.latin)
+    for stem in list(brand.latin):
+        for old, new in _ROTATION_RULES:
+            if old in stem:
+                out.add(stem.replace(old, new, 1))
+        for i in range(len(stem)):
+            out.add(stem[:i] + stem[i + 1:])
+            if i + 1 < len(stem):
+                out.add(stem[:i] + stem[i + 1] + stem[i] + stem[i + 2:])
+    return {t for t in out if len(t) >= 4}
+
+
 def enumerate_rotation_candidates(brand_id: str, reg: BrandRegistry | None = None,
                                   *, max_tlds: int | None = None,
                                   ) -> list[str]:
@@ -350,12 +439,7 @@ def enumerate_rotation_candidates(brand_id: str, reg: BrandRegistry | None = Non
                                     if t not in b.observed_tlds]
     if max_tlds:
         tlds = tlds[:max_tlds]
-    stems: set[str] = set(b.latin)
-    for stem in list(b.latin):
-        for old, new in _ROTATION_RULES:
-            if old in stem:
-                stems.add(stem.replace(old, new, 1))
-    return sorted(f"{s}.{t}" for s in stems for t in tlds)
+    return sorted(f"{s}.{t}" for s in _stems(b) for t in tlds)
 
 
 # ==========================================================================
@@ -380,6 +464,24 @@ SURFACES: tuple[str, ...] = (
     # docs/THESIS.md section 9.1. The surface is declared so a hit on it is
     # recorded as partial coverage rather than as invisibility.
     "messaging",
+    # --- added after the 2026-11-04 source pass. Each is independent of the
+    # --- search index, which is the only thing that makes it worth anything in
+    # --- coverage terms; a new query on an old surface is worth zero.
+    "certificate_transparency",  # CT logs: a name appears here before the site
+                                 # resolves, and it is the ONLY surface that
+                                 # sees subdomain rotation
+    "whois_drop",                # expiring names about to change hands: the
+                                 # acquisition moment, not its consequence
+    "discord",                   # public server directories (DISBOARD) list
+                                 # North-African movie hubs by drop cadence,
+                                 # subtitle language and Maghreb/Darija focus
+    "apk_package",               # Android package ids, which outlive every
+                                 # domain, brand and template a network rotates
+    "url_shortener",             # this corpus distributes via shorteners, not
+                                 # store links: one account ties many
+                                 # otherwise-unrelated releases together
+    "telegram_hashtag",          # t.me/s/<ch>?q=%23افلام — the public preview
+                                 # is hashtag-searchable with no API at all
 )
 
 #: Which surfaces a query string can actually reach. A probe is charged to every

@@ -37,6 +37,10 @@ from qarin.operator import Signal, cluster_offerings, signals_from_html  # noqa:
 from qarin.receipt import Receipt, ReplayRecipe, structural_fingerprint  # noqa: E402
 from qarin.report import build_pack, quote_gaps, scan_for_prohibited  # noqa: E402
 from qarin.operator import Cluster  # noqa: E402
+from qarin.rotation import (  # noqa: E402
+    Recogniser, continues_sequence, fold_homoglyphs, package_to_domains,
+    parse_release, route_of,
+)
 from qarin.discover import (  # noqa: E402
     KNOWN_BRANDS, ROTATION_TLDS, SURFACES, arabic_technical_terms, brand_signal,
     build_probes, co_occurrence_verdict, enumerate_rotation_candidates, plan,
@@ -474,7 +478,71 @@ def main() -> int:
     check("surfaces are distinct in kind, and coverage is charged per surface",
           len(SURFACES) >= 9 and len(set(SURFACES)) == len(SURFACES))
 
-    section("14. Unit suite")
+    section("14. The recogniser — classify what arrives, never emit a target")
+    # Certificate transparency and the drop list are feeds the platform does not
+    # control. The grammar is applied to whatever arrives, which is why this is
+    # the production path and the enumerator is only a validation device.
+    rec = Recogniser()
+    feed = ["myciiima.autos", "w13.mycima.movie", "mycima-official.xyz",
+            "larozza.living", "atlaspr0.net", "blog.example.com",
+            "recipes_daily.net", "weciima.tube"]
+    hits = list(rec.scan(feed, source="certificate_transparency"))
+    for h in hits:
+        print(f"    {h.name:22s} {h.verdict:15s} {h.brand_id:8s} {h.rule}"
+              + (f" combo={h.combo}" if h.combo else "")
+              + (f" sub={h.subdomain}" if h.subdomain else ""))
+    check("the recorded rotation stock is recognised from a mixed feed",
+          {"myciiima.autos", "weciima.tube", "mycima-official.xyz",
+           "w13.mycima.movie", "larozza.living", "atlaspr0.net"}
+          <= {h.name for h in hits}, f"{len(hits)} of {len(feed)} names")
+    check("unrelated names produce no hit rather than a weak one",
+          not any(h.name in ("blog.example.com", "recipes_daily.net") for h in hits),
+          "a None is not a negative finding, and counting it as one would "
+          "manufacture a denominator from a feed of millions")
+    check("the fold goes confusable -> Latin, never the reverse",
+          fold_homoglyphs("mycima") == "mycima"
+          and fold_homoglyphs("atlas pr0") == "atlas pro"
+          and fold_homoglyphs("mycima").isascii(),
+          "an inverted fold still matches exactly on both sides, so only the "
+          "approximate cases expose it — which is all of them")
+    check("a subdomain counter the list never saw is still recognised",
+          rec.classify("w99.mycima.movie") is not None
+          and rec.classify("w99.mycima.movie").verdict == "EXACT",
+          "recall has to be structural; a fixed prefix list made the operator's "
+          "most mechanical move invisible")
+    check("combosquat stock is stripped from both sides",
+          (rec.classify("mycima-official.xyz").combo == "official"
+           and rec.classify("official-mycima.net").combo == "official"))
+    r1 = route_of("https://w12.mycima.movie/watch.php?vid=14dbe5ecb")
+    r2 = route_of("https://larozza.living/video.php?vid=3d9e04fd3")
+    check("two brand families share one supplier route",
+          r1.product == r2.product == "paas_player" and r1.target == "supplier",
+          "the target is the vendor: one notice removes a hundred sites, where "
+          "one notice to a site removes one")
+    ap = parse_release("تطبيق SHAHID PLUS v11.0.0 بحجم 45 ميجا "
+                       "com.shahid.plus اندرويد 5+ bit.ly/x")
+    check("the APK layer reads the posting convention",
+          ap.app == "SHAHID PLUS" and ap.version_key == "11.0.0"
+          and ap.impersonates == "Shahid (MBC Group)" and ap.shortener,
+          f"-> {ap.to_dict()}")
+    check("the app name keeps its suffix, so the victim is not the accused",
+          "PLUS" in ap.app)
+    check("a filename is not a package and yields no domains",
+          package_to_domains("com.shahid.plus.apk") == ())
+    check("version continuity survives a full rotation",
+          continues_sequence(parse_release("Drama World v4.1 com.a.bcd"),
+                             parse_release("Drama World Pro v4.2.0 com.e.fg"))
+          is True
+          and continues_sequence(parse_release("App com.a.bcd"),
+                                 parse_release("App v2 com.e.fg")) is None,
+          "cannot tell must not be reported as 'not continued'")
+    check("the new surfaces are declared",
+          {"certificate_transparency", "whois_drop", "discord", "apk_package",
+           "url_shortener", "telegram_hashtag"} <= set(SURFACES),
+          f"{len(SURFACES)} surfaces; each is independent of the search index, "
+          "which is the only thing that makes it worth anything")
+
+    section("15. Unit suite")
     suite = unittest.defaultTestLoader.discover(str(ROOT / "tests"),
                                                 top_level_dir=str(ROOT))
     res = unittest.TextTestRunner(verbosity=1).run(suite)
@@ -488,7 +556,7 @@ def main() -> int:
             print("    - " + f)
         print("\n  Do not publish a number from this build.")
         return 1
-    print(f"  ALL 14 CONTRACT SECTIONS PASSED — {N_CHECKS} checks, of which "
+    print(f"  ALL 15 CONTRACT SECTIONS PASSED — {N_CHECKS} checks, of which "
           f"{N_REFUSALS} are refusals — {res.testsRun} UNIT TESTS GREEN")
     print("\n  Every refusal above is a feature: in each of those situations the")
     print("  instrument declines to produce a number or a verdict, and in none of")
