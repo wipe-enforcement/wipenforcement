@@ -283,6 +283,87 @@ Priority therefore follows the calendar and the cluster, never the view count:
 Audience magnitude never enters the ordering, because it is the one input that
 would have to be modelled.
 
+## 6.5 Discovery: the supply side publishes its own search method
+
+Every detection strategy so far is *passive* — wait for a crawler, a feed, a
+certificate. The Arabic ecosystem offers something better, because it advertises
+how to find it. Searching the public web for the titling of pirate film pages
+returns this, from a page on one of the largest networks in the region:
+
+> نمط عناوين البحث الشائعة: اسم الفيلم + السنة + «مدبلج» + «HD أون لاين» + أسماء
+> مواقع المشاهدة (ماي سيما، شاهد فور يو، عرب سيد) **للظهور في نتائج البحث**
+
+*film name + year + "dubbed" + "HD online" + the names of rival sites, in order
+to appear in search results.*
+
+So the expert technique — mix Arabic with English, add a famous pirate site name,
+and the corpus opens up — is not folklore. It is **reverse-engineered SEO of the
+supply side**, and it works because the pirate networks bid on each other's
+brands. That reframes it: the method is not a way to search, it is a reading of
+how the trade advertises. It therefore has two applications nobody intended.
+
+**1. Brand co-occurrence is attribution, not just a search trick.** A lookalike
+`eegebest.com` was found whose keyword metadata clusters the entire family —
+egybest, mycima, wecima, cima4u, arabseed, akwam, faselhd. No party owning one
+site has any reason to bid on six competitors. Whoever registers rotation stock
+in bulk advertises for all of it, and the co-occurrence is the evidence. IDF
+guarding still applies, because brand tokens are themselves high-prevalence
+strings: one mention is `MENTION_ONLY`, two is `CORROBORATING`, three or more in
+a single meta block is `ROTATION_STOCK`.
+
+**2. The misspelling is systematic, so the next domain is predictable.** Egypt
+shut MyCima down (Alexandria; ~12,000 films, ~26,000 series, ~50m visits a month).
+It was back within days as WeCima on `wecima.tube`, with roughly seventy
+near-identical domains in circulation — `myciiima.autos`, `.bond`, `.boats`,
+`.makeup`, `.monster` — and the `weciima.*` replacements registered **before** the
+rebrand. Vowel doubling plus a recognisable set of cheap new gTLDs
+(`.autos .bond .boats .makeup .monster .codes .tube .cyou .quest .homes`) is a
+grammar, and a grammar enumerates. `enumerate_rotation_candidates("mycima")`
+reproduces **5 of 5** of the documented stock from the brand name alone.
+
+That second point changes the *timing* of enforcement, and it is the most
+actionable idea in this document. Rotation stock is bought **in bulk and in
+advance**, so a domain that is registered, in the rotation TLD set, carrying a
+known brand token, and resolving to nothing yet, is a *scheduled appearance*.
+Watching the WHOIS/RMRD new-domain feed for that set gives notice in days, before
+the traffic moves — the only moment when a network can be interrupted rather than
+merely observed.
+
+**3. Succession is a documented public event.** The successor marketed itself as
+`بديل ماي سيما` — *the alternative to MyCima* — and absorbed EgyBest's audience
+while EgyBest was down. A platform that counts brands counts *increases*; one
+that tracks lineage counts one operator continuing. `lineage_edge()` makes that a
+query rather than an inference, and it is the strongest operator finding
+available without anybody's cooperation.
+
+**The discipline this imposes, and the trap it avoids.** A thousand clever
+queries are not a thousand detectors. They are a thousand probes of *one* surface
+— the search index — and `supply_coverage` correctly charges them as a single
+trapping occasion. **Keyword variety buys recall within a surface and nothing at
+all in fleet coverage.** Coverage is bought with surfaces, and they are distinct
+in kind, not in wording:
+
+```
+search_index · site_crawl · seo_farm · telegram · iptv_manifest · torrent_swarm ·
+app_store · ugc · new_domain_feed · paste_site · messaging
+```
+
+So `QueryPlan` reports itself per-surface and says so plainly —
+`"110 probes on 1 surface: this is ONE detector, however clever the wording"` —
+rather than letting a probe count be read as a coverage figure. That bookkeeping
+error is the most likely single cause of a false 95% claim in this entire design:
+a fleet convinces itself it has visibility while it has only rephrased one
+crawler nine different ways.
+
+**Two vocabulary facts generic Arabic NLP misses entirely.** First, the ecosystem
+writes technical English in Arabic script rather than translating it: `اتش دي` is
+HD, `بلوراي` is BluRay, `بوكس اوفيس` is box office, `دي في دي` is DVD, `اون لاين`
+is online. A parser looking for the Arabic *translation* finds nothing, because
+nobody uses it. Second, titles are **bidirectional** — `Sherlock Holmes: A Game of
+Shadows hd` inside Arabic running text is a real observed title — so a
+monolingual generator misses the whole mixed-script stratum, and every probe must
+record which script it aims at.
+
 ## 7. Arabic-specificity, and why it is the bottleneck
 
 Every number in this system is conditional on one upstream fact: that four

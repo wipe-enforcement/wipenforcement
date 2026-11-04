@@ -13,6 +13,9 @@ Modules, in the order the data flows:
 - :mod:`qarin.model`     — works, rights, territories, authorised channels, and
   the **rights calendar** that decides whether a copy is a leak, a substitute,
   or an unserved market
+- :mod:`qarin.discover`  — the probe lexicon (the supply side's own search
+  grammar), brand lineage, and **rotation forecasting** from the observed
+  misspelling pattern
 - :mod:`qarin.canonical` — Arabic and Latin entity resolution, including the
   episode/season grammar that is the real bottleneck in this ecosystem
 - :mod:`qarin.receipt`   — a capture that is born admissible and replayable
@@ -32,6 +35,20 @@ from .model import (  # noqa: F401
     WorkKind,
 )
 from .canonical import EpisodeRef, Offer, Resolver, fold_arabic, parse_offering
+from .discover import (
+    KNOWN_BRANDS,
+    ROTATION_TLDS,
+    SURFACES,
+    Brand,
+    BrandRegistry,
+    arabic_technical_terms,
+    brand_signal,
+    build_probes,
+    co_occurrence_verdict,
+    enumerate_rotation_candidates,
+    lineage_edge,
+    plan,
+)
 from .receipt import Receipt, ReplayRecipe, structural_fingerprint
 from .ledger import Ledger, LedgerError
 from .operator import Cluster, Signal, attribute, cluster_offerings
@@ -48,6 +65,9 @@ from .metrics import (
 __all__ = [
     "Work", "WorkKind", "Right", "Territory", "AuthorisedChannel", "Availability",
     "EpisodeRef", "Offer", "Resolver", "fold_arabic", "parse_offering",
+    "Brand", "BrandRegistry", "KNOWN_BRANDS", "ROTATION_TLDS", "SURFACES",
+    "arabic_technical_terms", "brand_signal", "build_probes", "plan",
+    "co_occurrence_verdict", "enumerate_rotation_candidates", "lineage_edge",
     "Receipt", "ReplayRecipe", "structural_fingerprint",
     "Ledger", "LedgerError",
     "Signal", "Cluster", "attribute", "cluster_offerings",

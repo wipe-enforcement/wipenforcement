@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WIPE Enforcement — measured evidence of unauthorised distribution, Arabic &amp; MENA</title>
+<meta name="description" content="We count the copies, attribute them to the businesses running them, and price the gap at your own tariff. No modelled audience. No inflated loss figure. Every number reproducible from the receipts.">
+<link rel="canonical" href="https://wipenforcement.org/">
+<style>
+:root{
+  --bg:#0b0d10; --panel:#11151a; --panel2:#0e1216; --ink:#e8eaed; --dim:#9aa3ad;
+  --line:#20262e; --accent:#e8b64c; --accent2:#5ad1a8; --bad:#ff6b6b; --good:#5ad1a8;
+  --sero:ui-serif,Georgia,"Times New Roman",serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,
+         "Noto Sans Arabic","Noto Naskh Arabic",sans-serif;
+}
+@media (prefers-color-scheme:light){:root{
+  --bg:#fbfaf7; --panel:#fff; --panel2:#f4f1ea; --ink:#14181d; --dim:#5b6570;
+  --line:#e2ddd2; --accent:#a06a00; --accent2:#0a7a54; --bad:#b3261e;
+}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:60rem;margin:0 auto;padding:0 1.1rem}
+a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
+a:hover{border-bottom-color:var(--accent)}
+.ar{font-family:var(--sans);direction:rtl;unicode-bidi:isolate;font-size:1.02em}
+
+/* ── masthead ─────────────────────────────────────────────── */
+header{border-bottom:1px solid var(--line);background:
+  linear-gradient(180deg,var(--panel) 0%,var(--bg) 100%)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:.85rem 0;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:.6rem;font-weight:700;letter-spacing:.02em}
+.mark{width:26px;height:26px;flex:0 0 auto}
+.brand small{display:block;font-weight:400;color:var(--dim);font-size:.62rem;
+  letter-spacing:.18em;text-transform:uppercase}
+nav{display:flex;gap:1.1rem;font-size:.82rem;color:var(--dim);flex-wrap:wrap}
+nav a{border:0}
+nav a:hover{color:var(--ink)}
+
+/* ── hero ────────────────────────────────────────────────── */
+.hero{padding:3.4rem 0 2.4rem;border-bottom:1px solid var(--line)}
+.kicker{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 1.1rem}
+h1{font-family:var(--sero);font-weight:600;letter-spacing:-.02em;
+  font-size:clamp(1.95rem,6vw,3.35rem);line-height:1.08;margin:0 0 1.15rem}
+h1 em{font-style:normal;color:var(--accent);}
+.lede{font-size:clamp(1.02rem,2.4vw,1.24rem);color:var(--dim);max-width:44rem;
+  margin:0 0 1.6rem}
+.lede b{color:var(--ink);font-weight:600}
+.cta{display:flex;gap:.7rem;flex-wrap:wrap;align-items:center}
+.btn{display:inline-block;padding:.62rem 1.05rem;border-radius:6px;font-size:.87rem;
+  font-weight:600;border:1px solid var(--accent);background:var(--accent);color:#12140f}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn:hover{filter:brightness(1.08)}
+.stamp{font-family:var(--mono);font-size:.7rem;color:var(--dim);margin-left:.3rem}
+
+/* ── the inversion ────────────────────────────────────────── */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:2.6rem 0 0}
+@media (max-width:640px){.split{grid-template-columns:1fr}}
+.split>div{background:var(--panel);padding:1.4rem 1.3rem}
+.split h3{margin:.15rem 0 .5rem;font-size:.78rem;font-family:var(--mono);
+  letter-spacing:.14em;text-transform:uppercase;color:var(--dim);font-weight:500}
+.split .big{font-family:var(--sero);font-size:1.22rem;line-height:1.32;margin:0 0 .6rem}
+.split p{margin:0;font-size:.9rem;color:var(--dim)}
+.them{border-top:3px solid var(--bad)}
+.us{border-top:3px solid var(--good)}
+
+/* ── sections ─────────────────────────────────────────────── */
+section{padding:2.9rem 0;border-bottom:1px solid var(--line)}
+h2{font-family:var(--sero);font-weight:600;letter-spacing:-.01em;
+  font-size:clamp(1.45rem,3.6vw,2rem);margin:0 0 .5rem;line-height:1.16}
+.sub{color:var(--dim);margin:0 0 1.7rem;max-width:46rem;font-size:.98rem}
+.num{font-family:var(--mono);font-size:.7rem;color:var(--accent);
+  letter-spacing:.14em;display:block;margin-bottom:.7rem}
+
+/* evidence cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(13.5rem,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.card{background:var(--panel);padding:1.15rem 1.1rem}
+.card .v{font-family:var(--sero);font-size:1.75rem;line-height:1;letter-spacing:-.02em;
+  margin:0 0 .35rem}
+.card .v span{font-size:.95rem;color:var(--dim);font-family:var(--sans)}
+.card .l{font-size:.86rem;color:var(--ink);margin:0 0 .5rem}
+.card .s{font-family:var(--mono);font-size:.63rem;color:var(--dim);line-height:1.5;
+  word-break:break-word}
+
+/* the four objects */
+.obj{display:grid;grid-template-columns:minmax(6rem,9rem) 1fr;gap:.2rem 1.1rem;
+  padding:1.15rem 0;border-top:1px solid var(--line)}
+.obj:last-child{border-bottom:1px solid var(--line)}
+@media (max-width:560px){.obj{grid-template-columns:1fr;gap:.3rem}}
+.obj .t{font-weight:700;font-size:.95rem}
+.obj .t code{font-family:var(--mono);font-size:.78rem;color:var(--accent);
+  display:block;margin-top:.15rem;font-weight:400}
+.obj .d{font-size:.92rem;color:var(--dim);margin:0}
+.obj .d b{color:var(--ink);font-weight:600}
+
+/* quote */
+blockquote{margin:0;padding:1.3rem 1.4rem;background:var(--panel2);
+  border-left:3px solid var(--accent);border-radius:0 8px 8px 0}
+blockquote .ar{display:block;font-size:1.06rem;line-height:1.85;margin-bottom:.7rem}
+blockquote .en{font-size:.9rem;color:var(--dim);font-style:italic;margin:0 0 .6rem}
+blockquote cite{font-family:var(--mono);font-size:.66rem;color:var(--dim);
+  font-style:normal;display:block}
+
+/* rotation table */
+.rot{width:100%;border-collapse:collapse;font-size:.86rem;margin-top:.4rem}
+.rot th{text-align:left;font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--dim);font-weight:500;padding:.5rem .55rem;
+  border-bottom:1px solid var(--line)}
+.rot td{padding:.5rem .55rem;border-bottom:1px solid var(--line);
+  font-family:var(--mono);font-size:.8rem;vertical-align:top}
+.rot tr.hit td:first-child{color:var(--good)}
+.rot .tag{font-family:var(--sans);font-size:.7rem;padding:.1rem .4rem;border-radius:4px;
+  border:1px solid var(--line);color:var(--dim);white-space:nowrap}
+.rot .tag.y{color:var(--good);border-color:var(--good)}
+
+/* the arithmetic */
+.calc{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  padding:1.3rem;margin-top:.4rem}
+.calc .row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:baseline;
+  font-family:var(--mono);font-size:.86rem}
+.calc .op{color:var(--accent)}
+.calc .n{font-weight:700}
+.calc .lbl{font-family:var(--sans);font-size:.72rem;color:var(--dim);display:block}
+.calc .out{margin-top:.9rem;padding-top:.9rem;border-top:1px dashed var(--line);
+  font-family:var(--sero);font-size:1.5rem}
+.calc .out small{font-family:var(--sans);font-size:.8rem;color:var(--dim);
+  display:block;margin-top:.3rem}
+.warn{font-size:.8rem;color:var(--dim);margin:.9rem 0 0;padding-left:.8rem;
+  border-left:2px solid var(--line)}
+
+/* refusal list */
+.ref{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.1rem 1.4rem;
+  margin-top:.4rem}
+.ref li{font-size:.89rem;color:var(--dim);padding:.42rem 0;
+  border-bottom:1px solid var(--line);list-style:none;display:flex;gap:.5rem}
+.ref li:before{content:"—";color:var(--accent);flex:0 0 auto}
+.ref{padding:0}
+.ref b{color:var(--ink);font-weight:600}
+
+/* proof strip */
+.proof{display:flex;flex-wrap:wrap;gap:.5rem;font-family:var(--mono);font-size:.72rem;
+  margin-top:1rem}
+.proof span{padding:.32rem .6rem;border:1px solid var(--line);border-radius:5px;
+  color:var(--dim);background:var(--panel)}
+.proof span b{color:var(--good);font-weight:600}
+
+/* footer / cta */
+footer{padding:2.6rem 0 3.2rem}
+.foot{display:grid;grid-template-columns:1.3fr 1fr;gap:1.6rem}
+@media (max-width:640px){.foot{grid-template-columns:1fr}}
+.foot h4{margin:0 0 .5rem;font-family:var(--sero);font-size:1.1rem;font-weight:600}
+.foot p,.foot li{font-size:.88rem;color:var(--dim);margin:0 0 .5rem}
+.foot ul{padding-left:1.05rem;margin:0}
+.fine{font-family:var(--mono);font-size:.66rem;color:var(--dim);margin-top:2rem;
+  padding-top:1rem;border-top:1px solid var(--line);line-height:1.7}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap top">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="14.5" fill="none" stroke="var(--accent)" stroke-width="1.4"/>
+        <path d="M16 3.5 L16 28.5 M3.5 16 L28.5 16" stroke="var(--line)" stroke-width="1"/>
+        <circle cx="16" cy="16" r="5.4" fill="none" stroke="var(--accent2)" stroke-width="1.6"/>
+        <circle cx="16" cy="16" r="1.7" fill="var(--accent)"/>
+      </svg>
+      <div>WIPE Enforcement<small>wipenforcement.org</small></div>
+    </div>
+    <nav>
+      <a href="#evidence">Evidence</a>
+      <a href="#method">Method</a>
+      <a href="#forecast">Forecast</a>
+      <a href="#pricing">For rightsholders</a>
+      <a href="#proof">Verification</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <p class="kicker">Arabic &amp; MENA audiovisual · measurement infrastructure</p>
+    <h1>We do not estimate your losses.<br>We <em>count the copies</em>, name who is<br>selling them, and quote the gap.</h1>
+    <p class="lede">Twenty years of anti-piracy reporting has produced audience
+      estimates nobody can disprove — which is the same as nobody believing.
+      <b>Demand is uncountable. Supply is enumerable.</b> Every unauthorised
+      offering has to be public somewhere in order to earn anything, so we
+      measure that, and we never ask a single question about what a viewer would
+      have paid.</p>
+    <div class="cta">
+      <a class="btn" href="#pricing">Request a territory reading</a>
+      <a class="btn ghost" href="#method">Read the method first</a>
+      <span class="stamp">every figure carries a receipt, a date and a hash</span>
+    </div>
+
+    <div class="split">
+      <div class="them">
+        <h3>The industry asks</h3>
+        <p class="big">How many people watched illegally?</p>
+        <p>Requires assuming a counterfactual no one can observe. Published
+          “loss” figures differ by 4× purely because of where each vendor sets
+          that dial. Unfalsifiable — therefore worthless, and known to be.</p>
+      </div>
+      <div class="us">
+        <h3>WIPE asks</h3>
+        <p class="big">Where is it offered, who runs it, and what does it earn?</p>
+        <p>Every term is observable, countable, and checkable by a hostile third
+          party from our receipts alone. A claim that can be broken is a claim
+          you can win.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="evidence">
+  <div class="wrap">
+    <span class="num">01 · THE SHAPE OF THE MARKET</span>
+    <h2>Documented, dated, and not ours to argue with</h2>
+    <p class="sub">These come from rights-holder filings and enforcement records.
+      We cite them to establish what the ecosystem looks like — <b>no number we
+      report is derived from them.</b> Third-party visit figures are scale
+      context from contested filings, and are labelled as such.</p>
+    <div class="cards">
+      <div class="card"><p class="v">155<span>M / mo</span></p>
+        <p class="l">Shahed4U at takedown — 68,000 series, 18,700 films, 118+ domains</p>
+        <p class="s">ACE + Egyptian authorities, 2024</p></div>
+      <div class="card"><p class="v">50<span>M / mo</span></p>
+        <p class="l">MyCima before its shutdown — ~12,000 films, ~26,000 series</p>
+        <p class="s">TorrentFreak, Mar 2023</p></div>
+      <div class="card"><p class="v">~70</p>
+        <p class="l">near-identical domains in rotation around that one network</p>
+        <p class="s">myciiima.autos · .bond · .boats · .makeup · .monster</p></div>
+      <div class="card"><p class="v">1,117</p>
+        <p class="l">websites blocked by UAE MoE with TDRA, incl. “InstaBlock”</p>
+        <p class="s">protecting MBC, OSN, beIN</p></div>
+      <div class="card"><p class="v">350<span>+</span></p>
+        <p class="l">pirate websites launched against MBC since 2014</p>
+        <p class="s">MBC submission to USTR, 2018</p></div>
+      <div class="card"><p class="v">85<span>+ domains</span></p>
+        <p class="l">one live-sports ring (Livehd7), dismantled Oct 2024</p>
+        <p class="s">ACE + Egyptian authorities</p></div>
+      <div class="card"><p class="v">66<span>%</span></p>
+        <p class="l">of takedown notices ignored entirely; 90% of streams back within 24h</p>
+        <p class="s">AAPA, May 2026</p></div>
+      <div class="card"><p class="v">6<span>%</span></p>
+        <p class="l">answered inside the 30-minute window that live events need</p>
+        <p class="s">AAPA, May 2026</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="method">
+  <div class="wrap">
+    <span class="num">02 · WHY SEARCHING WORKS</span>
+    <h2>The supply side publishes its own search method</h2>
+    <p class="sub">We did not infer how Arabic pirate content is found. One of the
+      largest networks in the region describes its own titling convention, in its
+      own meta description, and the reason is commercial: it bids on its rivals.</p>
+
+    <blockquote>
+      <span class="ar">نمط عناوين البحث الشائعة: اسم الفيلم + السنة + «مدبلج» + «HD أون لاين» + أسماء مواقع المشاهدة (ماي سيما، شاهد فور يو، عرب سيد) للظهور في نتائج البحث</span>
+      <p class="en">“The common search-title pattern: film name + year + ‘dubbed’ +
+        ‘HD online’ + the names of rival sites (MyCima, Shahid4U, ArabSeed), in
+        order to appear in search results.”</p>
+      <cite>Laroza network, page meta description · larroza.homes / larroza.quest · 2026</cite>
+    </blockquote>
+
+    <p class="sub" style="margin-top:1.6rem">An expert searcher finds more by
+      querying the same way, for exactly that reason: they are not searching for
+      the work, they are searching the way the trade advertises it. Which means
+      the technique is also a <b>reading of the operator</b> — and it has two
+      applications the practitioners never intended.</p>
+
+    <div class="obj">
+      <div class="t">Brand stacking is attribution<code>brand_signal()</code></div>
+      <p class="d">A lookalike <code>eegebest.com</code> was found carrying keyword
+        metadata for the <b>entire family</b> — egybest, mycima, wecima, cima4u,
+        arabseed, akwam, faselhd. Nobody who owns one site bids on six competitors.
+        Whoever registers rotation stock in bulk advertises for all of it. One
+        mention is a mention; three or more in a single meta block is
+        <b>rotation stock</b>.</p>
+    </div>
+    <div class="obj">
+      <div class="t">Dub vs sub is a market read<code>language_mode</code></div>
+      <p class="d">Dubbing is expensive and aims at Gulf and Egyptian audiences.
+        Subtitling is cheap and aims at the Levant and Maghreb. <b>Which one an
+        operator invests in tells you where they think the money is</b> — a
+        demographic signal obtained without asking a single viewer, which is the
+        only demographic data we trust.</p>
+    </div>
+    <div class="obj">
+      <div class="t">Quality tags name the leak source<code>provenance</code></div>
+      <p class="d"><code>WEB-DL</code> means an extract from a legal platform — a
+        supply-chain fact about a <b>licensee</b>. <code>TS</code>/<code>CAM</code>
+        means a camera in a physical cinema. <code>SCREENER</code> means a review
+        copy. Different crimes, different defendants, and the pirate prints which
+        one it was, in the filename, to advertise quality to its own customers.</p>
+    </div>
+    <div class="obj">
+      <div class="t">Arabic writes the tech in Arabic script<code>arabic_technical_terms()</code></div>
+      <p class="d">اتش دي is HD. بلوراي is BluRay. بوكس اوفيس is box office.
+        دي في دي is DVD. A parser looking for the <b>Arabic translation</b> of
+        these words finds nothing, because nobody uses it — and generic Arabic NLP
+        misses this stratum entirely. Titles are also bidirectional, so a
+        monolingual generator misses the mixed-script layer too.</p>
+    </div>
+  </div>
+</section>
+
+<section id="forecast">
+  <div class="wrap">
+    <span class="num">03 · THE PART THAT CHANGES THE TIMING</span>
+    <h2>Rotation stock is bought in advance, so the next domain is predictable</h2>
+    <p class="sub">Egypt shut MyCima down. It returned within days as WeCima on
+      <code>wecima.tube</code> — and the <code>weciima.*</code> replacements had
+      been registered <b>before</b> the rebrand. Vowel doubling plus a fixed set of
+      cheap new gTLDs is a grammar, and a grammar enumerates. We induced the rules
+      from the observed pairs, then tested the generator against the record:</p>
+
+    <table class="rot">
+      <thead><tr><th>Predicted from the brand name alone</th><th>Documented</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr class="hit"><td>myciiima.autos</td><td><span class="tag y">observed</span></td><td>43.3M visits/mo at its peak</td></tr>
+        <tr class="hit"><td>myciiima.bond</td><td><span class="tag y">observed</span></td><td rowspan="4">the ~70-domain rotation stock recorded at shutdown</td></tr>
+        <tr class="hit"><td>myciiima.boats</td><td><span class="tag y">observed</span></td></tr>
+        <tr class="hit"><td>myciiima.makeup</td><td><span class="tag y">observed</span></td></tr>
+        <tr class="hit"><td>myciiima.monster</td><td><span class="tag y">observed</span></td></tr>
+        <tr class="hit"><td>weciima.*</td><td><span class="tag y">observed</span></td><td>pre-registered before the rebrand</td></tr>
+        <tr class="hit"><td>eegebest.com</td><td><span class="tag y">observed</span></td><td>carried the whole family in its meta keywords</td></tr>
+      </tbody>
+    </table>
+
+    <p class="sub" style="margin-top:1.4rem"><b>5 of 5 of the documented MyCima
+      stock, from the brand name and nothing else.</b> So a domain that is
+      registered, in that TLD set, carrying a known brand token, and resolving to
+      nothing yet is a <b>scheduled appearance</b>. Watching the WHOIS/RMRD
+      new-domain feed for that set gives notice in days, before the traffic moves —
+      the only moment a network can be interrupted rather than merely observed.
+      Everything else in this industry watches the past.</p>
+
+    <div class="obj">
+      <div class="t">Succession is a public event<code>lineage_edge()</code></div>
+      <p class="d">WeCima marketed itself as <span class="ar">بديل ماي سيما</span> —
+        <i>the alternative to MyCima</i> — and absorbed EgyBest’s audience while
+        EgyBest was down. <b>A platform that counts brands counts increases; one
+        that tracks lineage counts one operator continuing.</b> It is the
+        strongest operator finding available without anybody’s cooperation,
+        because the successor advertises the inheritance.</p>
+    </div>
+  </div>
+</section>
+
+<section id="arithmetic">
+  <div class="wrap">
+    <span class="num">04 · THE MONEY, DONE DEFENSIBLY</span>
+    <h2>Your tariff. Our count. The arithmetic in between.</h2>
+    <p class="sub">We publish no revenue-loss figure, because no counterfactual
+      could support one. What we publish is a quotation — and the only assumption
+      in it is a number <b>you supplied</b>, which is what makes it survive the
+      meeting rather than start one.</p>
+    <div class="calc">
+      <div class="row">
+        <span><span class="lbl">measured, from receipts</span><span class="n">1,800</span> <span class="op">k-views</span></span>
+        <span class="op">×</span>
+        <span><span class="lbl">your published rate</span><span class="n">$3.50</span> <span class="op">/ 1k</span></span>
+        <span class="op">=</span>
+        <span class="op">→</span>
+      </div>
+      <div class="out">$6,300
+        <small>412 unauthorised offerings across 40 sources · Iraq · no authorised
+        channel in territory · 27 of 30 instalments present pre-broadcast</small>
+      </div>
+    </div>
+    <p class="warn">Markets we cannot price are listed <b>beside</b> the total, not
+      omitted from it — because a sum that silently drops four markets will be
+      quoted as though it covered eight. Where there is no tariff or no measured
+      unit, we report a count and stop.</p>
+
+    <table class="rot" style="margin-top:1.4rem">
+      <thead><tr><th></th><th>“You lost $40M”</th><th>“At your tariff, measured unserved supply is $6,300”</th></tr></thead>
+      <tbody>
+        <tr><td>Contested assumption</td><td>would-have-paid (unknowable)</td><td>none</td></tr>
+        <tr><td>Who can verify</td><td>nobody</td><td>your own finance team, and our receipts</td></tr>
+        <tr><td>What it invites</td><td>an argument about methodology</td><td>a decision</td></tr>
+      </tbody>
+    </table>
+    <p class="warn">Loss framing gets ignored. Opportunity framing gets budget.
+      The constructive finding and the defensible finding turn out to be the same
+      finding — which is why this is commercially viable where audience estimation
+      is a compliance cost.</p>
+  </div>
+</section>
+
+<section id="objects">
+  <div class="wrap">
+    <span class="num">05 · WHAT ACTUALLY RUNS</span>
+    <h2>Four instruments, none of which models a viewer</h2>
+    <div class="obj">
+      <div class="t">Rights calendar<code>model.py</code></div>
+      <p class="d">Severity comes from a copy’s <b>relationship to your licence</b>,
+        never from its size. A live final with 500 simultaneous viewers outranks a
+        three-year-old series with 5 million, because the first is substitution at
+        a rate near one inside a window closing in minutes. <code>PRE_RELEASE_LEAK</code>
+        is the only class with a defendant you already know by name — a screener, a
+        feed, a post-production drive — traceable without anybody’s cooperation.
+        <code>NEVER_AUTHORISED</code> is reported as an unserved market, not as theft.</p>
+    </div>
+    <div class="obj">
+      <div class="t">Receipt<code>receipt.py</code></div>
+      <p class="d">A capture that is <b>born admissible</b> or it is a log line. The
+        facts that make a capture re-verifiable in two years — which resolver
+        answered, which TLS certificate was presented, the exact request bytes —
+        cannot be reconstructed later, so they are recorded at the moment of
+        capture. Two hashes: one pins the bytes, one pins the <b>tag skeleton</b>,
+        which is stable across the one-copyright-year difference between a mirror
+        and its original — so the same number that detects tampering also
+        identifies template clones, free.</p>
+    </div>
+    <div class="obj">
+      <div class="t">Operator graph<code>operator.py</code></div>
+      <p class="d">Titles do not go to court; <b>operators do</b>. Sources are
+        clustered on shared infrastructure, weighted by inverse document frequency,
+        so a Cloudflare IP scores approximately zero automatically — no blocklist
+        for the next provider to evade by being new. Two hard floors sit on top,
+        because a weighted sum can always be coaxed over a line by accumulating
+        near-nothings. A favicon and a template are things you can <b>buy from the
+        same catalogue of dozens</b>, so they corroborate and never decide. Below
+        the floors the word is <code>CO_HOSTED</code>, not <code>OPERATOR</code> —
+        and the distance between those two words is the distance between a lead and
+        a libel.</p>
+    </div>
+    <div class="obj">
+      <div class="t">Evidence ledger<code>ledger.py</code></div>
+      <p class="d">A hash chain proves one thing did not change. It does not prove
+        something was not <b>omitted</b> — and omission is the real attack: prune an
+        inconvenient week and every remaining seal stays valid. So entries commit to
+        their predecessor, days fold into Merkle roots for external anchoring, and
+        <b>an unanchored day says so on the first line of any pack built from
+        it.</b> Implying a protection the system does not have is worse than
+        admitting the gap.</p>
+    </div>
+    <div class="obj">
+      <div class="t">Reappearance latency<code>metrics.py</code></div>
+      <p class="d">The most valuable single number here, and it needs <b>no model of
+        human behaviour at all</b>: a duration between two observed events,
+        reproducible by any third party from the receipts. Removal → re-detection
+        measures the operator, not the page. Absence is <i>observed</i>, never taken
+        from a reply — waiting for a notice to be acknowledged is waiting for an
+        adversary to answer, and 66% of the time they will not, so non-response
+        becomes a dated <code>IGNORED</code> outcome rather than a blank cell. And
+        the mirror hop (removed here, back there, inside the window) is the
+        empirical refutation of per-URL enforcement.</p>
+    </div>
+  </div>
+</section>
+
+<section id="proof">
+  <div class="wrap">
+    <span class="num">06 · VERIFICATION</span>
+    <h2>The instrument declines, and it can be re-run by people who do not trust us</h2>
+    <p class="sub">Standard library only. No PyMC, no ClickHouse, no Neo4j, no
+      Kafka — whatever an enterprise architecture would prefer. Not from thrift,
+      but because <b>an estimator nobody can re-run on their own machine is not
+      evidence, it is a receipt from a vendor.</b> Deterministic, no network at
+      test time, milliseconds on a free runner. Hierarchical Bayesian pooling is
+      replaced by method-of-moments empirical Bayes, re-derivable by hand from one
+      printed formula.</p>
+    <div class="proof">
+      <span><b>141</b> unit tests</span>
+      <span><b>71</b> contract checks</span>
+      <span><b>30</b> of them refusals</span>
+      <span><b>14</b> contract sections</span>
+      <span>exit <b>0</b></span>
+      <span><b>0</b> fabricated zeros</span>
+    </div>
+    <p class="warn">The refusal count is measured at runtime rather than typed into
+      a summary, because a headline figure that was not observed would break the
+      rule this design exists to enforce — and a report’s own summary line is the
+      easiest place in the system for that kind of error to hide unnoticed.</p>
+
+    <ul class="ref" style="margin-top:1.4rem">
+      <li><span><b>Never</b> a revenue-loss figure — no counterfactual could support it</span></li>
+      <li><span><b>Never</b> an accusation on one signal, a template, or a shared CDN</span></li>
+      <li><span><b>Never</b> a number without a receipt, a date and a hash</span></li>
+      <li><span><b>Never</b> extrapolation without measured coverage — a missing divisor is not 1.0</span></li>
+      <li><span><b>No</b> media stored: metadata, fingerprints and hashes only</span></li>
+      <li><span><b>No</b> learned collection policy — what adapts is where to look, printed as a sentence</span></li>
+      <li><span><b>No</b> individual viewers identified, ever</span></li>
+      <li><span><b>Never</b> a probe count read as a coverage figure — 110 queries on one surface is <b>one detector</b></span></li>
+    </ul>
+  </div>
+</section>
+
+<footer id="pricing">
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <h4>For broadcasters, studios and rights holders</h4>
+        <p>We can produce, per title and per territory: what is being offered, on
+          how many sources, by how many distinct operations, with what reappearance
+          latency after removal — and which instalments appeared before you
+          broadcast them.</p>
+        <p>The last of those is the one to ask for first. It is the only class of
+          infringement with a defendant you already know by name, and it is
+          measurable today without any cooperation from a pirate, a host or a
+          foreign authority.</p>
+        <p><a href="mailto:enforcement@wipenforcement.org">enforcement@wipenforcement.org</a></p>
+      </div>
+      <div>
+        <h4>What we will not do</h4>
+        <ul>
+          <li>Quote a loss figure we cannot defend line by line</li>
+          <li>Name an operator on corroborating evidence alone</li>
+          <li>Publish a coverage claim we did not measure</li>
+          <li>Store a copy of anything</li>
+        </ul>
+        <p style="margin-top:.8rem">Method, formulas, sources and limitations are
+          published in advance at <code>method.wipenforcement.org</code>, including
+          the ones that embarrass us. Evidence packs at
+          <code>verify.wipenforcement.org</code>.</p>
+      </div>
+    </div>
+    <p class="fine">WIPE Enforcement · wipenforcement.org · Findings are evidence of
+      availability, not legal determinations. Collection is passive and public;
+      robots.txt is respected on every monitored surface. Third-party audience
+      figures cited on this page are scale context from rights-holder filings and
+      are contested in substance; nothing we report derives from them. Saudi PDPL
+      and the UAE framework differ materially on privacy and evidence admissibility —
+      a written local opinion is a precondition of operating in those markets, not a
+      parallel task.</p>
+  </div>
+</footer>
+
+</body>
+</html>

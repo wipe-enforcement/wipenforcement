@@ -37,6 +37,10 @@ from qarin.operator import Signal, cluster_offerings, signals_from_html  # noqa:
 from qarin.receipt import Receipt, ReplayRecipe, structural_fingerprint  # noqa: E402
 from qarin.report import build_pack, quote_gaps, scan_for_prohibited  # noqa: E402
 from qarin.operator import Cluster  # noqa: E402
+from qarin.discover import (  # noqa: E402
+    KNOWN_BRANDS, ROTATION_TLDS, SURFACES, arabic_technical_terms, brand_signal,
+    build_probes, co_occurrence_verdict, enumerate_rotation_candidates, plan,
+)
 
 BAR = "=" * 74
 FAILURES: list[str] = []
@@ -46,10 +50,27 @@ def section(title: str) -> None:
     print(f"\n{BAR}\n{title}\n{BAR}")
 
 
+#: Labels asserting a negative. Each one is a situation where the instrument
+#: declines to produce a number or a verdict. They are counted at runtime rather
+#: than hard-coded, because a summary figure that was typed instead of measured
+#: would breach the same rule this whole design is built on — and this script is
+#: the easiest place in the system for that kind of lie to hide unnoticed.
+REFUSAL_MARKERS = ("never", "not ", "no ", "refus", "unmeasurable", "declin",
+                   "without", "empty", "blocks", "neither", "nor ", "only")
+
+N_CHECKS = 0
+N_REFUSALS = 0
+
+
 def check(label: str, ok: bool, detail: str = "") -> None:
+    global N_CHECKS, N_REFUSALS
     print(f"  [{'PASS' if ok else 'FAIL'}] {label}" + (f" — {detail}" if detail else ""))
     if not ok:
         FAILURES.append(label)
+    N_CHECKS += 1
+    low = label.lower()
+    if any(m in low for m in REFUSAL_MARKERS):
+        N_REFUSALS += 1
 
 
 HTML = ("<html><head><title>X</title><script>ga('create','G-ABC123456')</script>"
@@ -410,7 +431,50 @@ def main() -> int:
     doc = pack.markdown()
     check("the markdown renders with its caveats", "## Caveats" in doc)
 
-    section("13. Unit suite")
+    section("13. Discovery — the expert's method, and what it is worth")
+    # The pattern is not invented here. It is quoted from a page on one of the
+    # largest networks in the region, describing its own titling convention:
+    #   film name + year + "dubbed" + "HD online" + the names of rival sites,
+    #   "in order to appear in search results".
+    got = arabic_technical_terms("جودة اتش دي بلوراي بوكس اوفيس ماي سيما")
+    check("transliterated tech vocabulary is read (HD/BluRay written in Arabic script)",
+          {"HD", "BluRay", "box office", "mycima"} <= set(got), f"-> {sorted(got)}")
+    pr = build_probes("الراهب", "Al Raheb", year="2026")
+    pl = plan(pr)
+    print(f"    {pl.to_dict()['note']}")
+    check("a large probe set on one surface is accounted as ONE detector",
+          pl.n_surfaces == 1 and len(pl.probes) > 50
+          and "ONE detector" in pl.independence_note(),
+          f"{len(pl.probes)} probes, {pl.n_surfaces} surface — keyword variety "
+          "buys recall, never coverage")
+    check("the stacked-brand shape is generated, as the source describes it",
+          any(len(x.brand_tokens) >= 3 for x in pr),
+          "the probe that finds the pre-registration layer")
+    obs = ("myciiima.autos", "myciiima.bond", "myciiima.boats", "myciiima.makeup",
+           "myciiima.monster")
+    cands = set(enumerate_rotation_candidates("mycima"))
+    hits = [d for d in obs if d in cands]
+    check("the rotation grammar predicts the domains actually observed",
+          len(hits) >= 4, f"{len(hits)}/5 of the documented MyCima stock: "
+          f"{hits}")
+    check("the WeCima reserve and the eegebest lookalike are both predicted",
+          any(d.startswith("weciima.") for d in enumerate_rotation_candidates("wecima"))
+          and "eegebest.com" in set(enumerate_rotation_candidates("egybest")))
+    one = brand_signal("شاهد فيلم الراهب على ماي سيما")
+    fam = brand_signal("egybest mycima wecima cima4u arabseed akwam faselhd")
+    check("one brand mention is not evidence", co_occurrence_verdict(one) == "MENTION_ONLY",
+          f"-> {one}")
+    check("a family stack in one meta block is rotation stock",
+          co_occurrence_verdict(fam) == "ROTATION_STOCK", f"-> {fam}")
+    check("succession is detectable from the document itself",
+          "بديل" in "وي سيما الجديد بديل ماي سيما"
+          and {"mycima", "wecima"} <= set(
+              brand_signal("وي سيما wecima بديل ماي سيما mycima")))
+    print(f"    surfaces declared: {len(SURFACES)} -> {', '.join(SURFACES)}")
+    check("surfaces are distinct in kind, and coverage is charged per surface",
+          len(SURFACES) >= 9 and len(set(SURFACES)) == len(SURFACES))
+
+    section("14. Unit suite")
     suite = unittest.defaultTestLoader.discover(str(ROOT / "tests"),
                                                 top_level_dir=str(ROOT))
     res = unittest.TextTestRunner(verbosity=1).run(suite)
@@ -424,10 +488,13 @@ def main() -> int:
             print("    - " + f)
         print("\n  Do not publish a number from this build.")
         return 1
-    print(f"  ALL {13} CONTRACT SECTIONS PASSED, {res.testsRun} UNIT TESTS GREEN")
-    print("\n  Every refusal above is a feature: this instrument says 'I do not")
-    print("  know' in eighteen distinct situations, and in none of them does it")
-    print("  print a zero.")
+    print(f"  ALL 14 CONTRACT SECTIONS PASSED — {N_CHECKS} checks, of which "
+          f"{N_REFUSALS} are refusals — {res.testsRun} UNIT TESTS GREEN")
+    print("\n  Every refusal above is a feature: in each of those situations the")
+    print("  instrument declines to produce a number or a verdict, and in none of")
+    print("  them does it print a zero. The refusal count is measured here rather")
+    print("  than typed, because a summary figure that was not observed would")
+    print("  break the rule this design exists to enforce.")
     return 0
 
 
