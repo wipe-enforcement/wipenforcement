@@ -545,17 +545,23 @@ def main() -> int:
           and fold_homoglyphs("mycima").isascii(),
           "an inverted fold still matches exactly on both sides, so only the "
           "approximate cases expose it — which is all of them")
+    # Synthetic hosts on the loaded corpus. The directly-observed instances that
+    # motivated these checks are recorded as citations in docs/SOURCES.md and are
+    # deliberately not reproduced here: this file is public, and a list of hosts
+    # we are watching now is a watch list rather than evidence.
+    probe = INTEL.brands[0].latin[0]
+    tld = (INTEL.brands[0].observed_tlds or ["example"])[0]
     check("a subdomain counter the list never saw is still recognised",
-          rec.classify("w99.mycima.movie") is not None
-          and rec.classify("w99.mycima.movie").verdict == "EXACT",
+          (rec.classify(f"w99.{probe}.{tld}") is not None
+           and rec.classify(f"w99.{probe}.{tld}").verdict == "EXACT"),
           "recall has to be structural; a fixed prefix list made the operator's "
           "most mechanical move invisible")
     check("combosquat stock is stripped from both sides",
-          (rec.classify("mycima-official.xyz").combo == "official"
-           and rec.classify("official-mycima.net").combo == "official"))
-    r1 = route_of("https://w12.mycima.movie/watch.php?vid=14dbe5ecb")
-    r2 = route_of("https://larozza.living/video.php?vid=3d9e04fd3")
-    check("two brand families share one supplier route",
+          (rec.classify(f"{probe}-official.{tld}").combo == "official"
+           and rec.classify(f"official-{probe}.{tld}").combo == "official"))
+    r1 = route_of(f"https://w1.{probe}.{tld}/watch.php?vid=0123456789")
+    r2 = route_of(f"https://w2.{probe}.{tld}/video.php?vid=9876543210")
+    check("hosts share one supplier route",
           r1.product == r2.product == "paas_player" and r1.target == "supplier",
           "the target is the vendor: one notice removes a hundred sites, where "
           "one notice to a site removes one")
