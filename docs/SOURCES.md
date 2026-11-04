@@ -59,6 +59,55 @@ Note on #25: the 90%-within-24-hours reappearance figure and the rotation findin
 `reappearance_latency` is the instrument that measures it per-offering rather than
 per-industry.
 
+## The recogniser layer (2026-11-04 second pass)
+
+| # | Fact | Source | Date |
+|---|---|---|---|
+| 26 | **Subdomain rotation observed on the same networks**: `w12.mycima.movie`, `ww.elaphjournal.com`, `s.sanaa-tv.com`. Documented as a blacklist-evasion technique in which "attackers rotate subdomains and use redirector domains to bypass blacklists" | `w12.mycima.movie/watch.php`, `ww.elaphjournal.com`, `s.sanaa-tv.com` (observed); `bfore.ai` "Look Beyond Typosquatting" datasheet | 2026 / 2025 |
+| 27 | **A shared application route across separate brand families**: `watch.php?vid=<9 hex>` on mycima, `video.php?vid=<9 hex>` on laroza (`.living`, `.baby`, `.homes`). Same scripts, same parameter, same fixed-width hex id shape | `w12.mycima.movie`, `larozza.living`, `larroza.baby`, `larroza.homes` — all observed with titles | 2026 |
+| 28 | **Piracy-as-a-service is documented as such**: "pirate sites and IPTV operators build off-the-shelf streaming operations" — Vidsrc, XPass.top, HydraHD, **WHMCS Smarters** | MPA submission to USTR, `torrentfreak.com/images/mpa-ustr-26.pdf` | 2026 |
+| 29 | **Illegal IPTV services profiled by name**: Atlas Pro (suspected Algerian operator), Apollo Group TV, EVPad, GenIPTV, Gogo/Orca IPTV (Algeria), Kemo Lemo IPTV (UAE, Dubai Police investigation). 2023: operators charged and convicted, "despite this the site has reemerged with mirror sites and alternative domains" | MPA submission to USTR public consultation, `torrentfreak.com/images/26.6-MPA_Submission.pdf` | 2026 |
+| 30 | **Typosquatting is built around rotation**: operations "assume each domain lives weeks"; detection is via permutations, **certificate transparency** and ad monitoring on brand terms | `impersonally.io/glossary/typosquatting` | 2026 |
+| 31 | **Combosquatting is a distinct family** from typosquatting: `brand-official.com`, `brand-support.com` — patterns that "imply a false relationship" rather than misspell | `domscan.net/ar/glossary/cybersquatting`; `brandefense.io`; `adflagger.com` (catalogues transposition, added characters, adjacent key, added word or hyphen, alternative extension, homoglyph) | 2026 |
+| 32 | **A ready-made typosquat feed exists**: an API returning registered typo variants of a brand across 1500+ TLDs with registration dates **and drop status** | `whoisfreaks.com/documentation/domain-typosquats-api` | 2026 |
+| 33 | **Telegram APK posting convention is rigid**: app name + version + size + Android compatibility + shortener link. Observed products: **STORM ONE, CRYSTAL OTT, ATLAS PR0** (digit zero), Drama World V4.1 / V4.1a Pro, xonetvplus-V10.0 / V11.0.0 | `t.me/s/Expert_Net`, `t.me/s/xonetvplus`, `t.me/s/androidone01`, `telemetr.io` (@apkmodsfrreee, @ameer_droid) | 2026 |
+| 34 | **Pirate apps impersonate legal platforms by name**: SHAHID PLUS, ALIFLIX, MTNTV, BLADEUHD, VICTV — distributed via shorteners rather than store links | `t.me/s/androidone01` ("ملتقى الأبطال ONE") | 2026 |
+| 35 | **Android package naming is the reversed domain the developer controls** (`app.example.in` → `in.example.app`); observed in this corpus: `com.aflamtvmaroc.moviesdarija` — "Aflam Maghribia", Moroccan Darija films, marketed as "a free alternative to Netflix in Morocco" | `stackoverflow.com` (Android manifest package convention); `approcket.ir` package-name rules; `myandroid.org/apps/com-aflamtvmaroc-moviesdarija` | 2026 |
+| 36 | **Discord is a surface**: public server directories list North-African movie hubs by drop cadence ("daily movie drops"), HD streaming, EN/AR/FR subtitles, and Maghreb/Darija-focused channels | `disboard.org` server 1386815476029456527 ("Vortex") | 2026 |
+| 37 | **Telegram public preview is hashtag-searchable** with no API: `t.me/s/<channel>?q=%23افلام` | `t.me/s/Expert_Net?q=%23افلام`, `?q=%23دراما` | 2026 |
+| 38 | **Arabic AVT terms are regionally split**: السترجة (subtitling, written text at screen bottom) vs الدبلجة (dubbing, replacing the soundtrack), with "differing term usage among Maghrebis, Mashreqis and Gulf scholars"; terminology is non-standardised across the region | `asjp.cerist.dz` (Algerian AVT strategies paper); GCC translation-centre volume `gcc-sg.org`; `media.neliti.com` | 2025–2026 |
+| 39 | **Dubbing target is a market signal**: Turkish series are dubbed in **Syrian** dialect; Mexican soaps into **MSA**; Disney compared Egyptian-dialect vs MSA re-dubbing (dialect preserves humour); MBC Bollywood dubbed Indian films in **Gulf** Arabic; Morocco's first Darija dubbing was 2009 and controversial; **Netflix uses MSA-only** Arabic subtitles | `ddd.uab.cat` (Designis 2017); `centaur.reading.ac.uk` (Alshebani thesis); `hbku-qa.libguides.com`; `afrasia-trans.com` dubbing dialect guide; `manara.qnl.qa` | 2017–2025 |
+| 40 | **Maghreb carries a French layer**: Darija has heavy French/Spanish loanword borrowing and code-switching; Moroccan film distribution pairs Darija audio with French subtitling (Fandor = French/Darija with English subs; Aflamedia = Darija without subtitles); subtitles for learning are "usually in French or MSA" | archived Wikipedia *Moroccan Darija*; `darijaschool.com`; `malteseboy.tumblr.com`; `s3.amazonaws.com/...azidouhSp18.pdf` (Ayouch cinema study) | 2026 / 2016 |
+| 41 | **Talk-show episodes are indexed by guest as well as number**, and the observed titles carry digit and ordinal together: «برنامج رامز ايلون مصر الحلقة 8 الثامنة - محمد كنو», «الحلقة الحلقة 6 السادسة حلقة حسام حبيب», «برنامج حبر سري 3 الحلقة 8 الثامنة», «برنامج المطانيخ الحلقة 4 الرابعة HD» | `w12.mycima.movie`, `larozza.living`, `larroza.baby`, `s.sanaa-tv.com` — page titles | 2026 |
+| 42 | **Saudi live-sports rights are contested in the public record**: multiple Arabic outlets assert ثمانية holds دوري روشن rights exclusively to 2031, while others publish "تصحيح رسمي" (official correction) asserting SSC is the exclusive broadcaster — so the rights calendar for a single competition has contradictory entries from dated sources | `alkhaleej.ae` (multiple PDFs), `goal.com/ar`, `saudidory.com` vs `alahsaonline.com`, `shofnews.com` | 2025–2026 |
+| 43 | **Satellite-frequency vocabulary is a distinct Arabic surface**: تردد (frequency), ناقل حصري (exclusive broadcaster), عرب سات / نايل سات — and pirate streams piggyback on legitimate frequency-listing pages | `alahsaonline.com`, `alkhaleej.ae`, `saudidory.com` | 2026 |
+| 44 | **Arabic-English bilingual SEO requires planning for spelling variants**: "Arabic queries arrive in multiple valid spellings and Latin transliteration, so sites must plan for spelling variants rather than one canonical form" | `younusfardeen.com/blog/arabic-english-bilingual-seo` (Gulf-focused) | 2026 |
+
+## What the second pass changed
+
+Not merely more names. It inverted the direction of the discovery layer.
+
+The first version **generated** candidate lookalike names from the grammar and
+watched them. That is noisy — most candidates are unregistered, so watching them
+is watching nothing — and it is dual-use in a way a classifier is not. The
+production path is the inverse: consume two feeds the platform does not control
+(certificate transparency, and the expiring-registration drop list) and ask of
+each arriving name only whether the grammar explains it.
+
+Certificate transparency is the surface that forced this. Subdomain rotation
+(`w12.mycima.movie` → `w13.…`) produces **no WHOIS event at all**, because the
+apex is never touched, so a registration monitor is structurally blind to it —
+but an operator cannot serve TLS without a certificate for each name. Observed in
+one pass: `w12.mycima.movie`, `ww.elaphjournal.com`, `s.sanaa-tv.com`.
+
+And the APK layer turned out to hold the most stable operator key in the system.
+A package id is the reversed domain the developer controlled at authoring time, it
+is essentially never rotated (changing it breaks every install and every
+auto-update path), and the implied domain may have expired years ago — which is
+exactly what the drop-list surface watches. Version continuity (`V4.1` → `V4.1a`
+→ `V10.0` → `V11.0.0`) links a rebrand to the same developer and survives a full
+domain, package *and* template rotation, which no infrastructure signal does.
+
 ## What is *not* cited
 
 Nothing in `qarin/` derives a published number from the sources above. They
