@@ -584,6 +584,7 @@ input[type=range]{accent-color:var(--gold2)}input:focus,select:focus{border-colo
           <div class="field">
             <label>Territory &amp; licence state</label>
             <select id="c-terr">
+              <option value="sa-lic">KSA — licensed, window open (Shahid, top KSA platform, verified)</option>
               <option value="eg-lic">Egypt — licensed, window open (Shahid verified)</option>
               <option value="eg-pre">Egypt — licensed, but copy seen <b>before</b> first broadcast</option>
               <option value="eg-post">Egypt — licence expired last September</option>
@@ -1142,6 +1143,9 @@ showRot();
 var cKind=document.getElementById("c-kind"),cTerr=document.getElementById("c-terr"),
     cOut=document.getElementById("c-out");
 var CAL={
+ "series|sa-lic":{av:"CONCURRENT_UNAUTHORISED",sev:3,sla:240,
+   why:"legally on Shahid — the top KSA platform — at the same time; substitution is real but partial, and KSA lead-market exposure",
+   act:"standard DMCA / regional notice; supplier-route escalation if the host runs a shared player"},
  "series|eg-lic":{av:"CONCURRENT_UNAUTHORISED",sev:3,sla:240,
    why:"legally on Shahid at the same time — substitution is real but partial",
    act:"standard DMCA / regional notice; supplier-route escalation if the host runs a shared player"},
@@ -1160,6 +1164,9 @@ var CAL={
  "live|eg-lic":{av:"SIMULTANEOUS_LIVE",sev:2,sla:5,
    why:"inside the live rights window of the event — substitution rate approaches 1, and damage is minutes-up",
    act:"30-minute standard: tokenised-HLS route, supplier-level notice, regulator-grade receipt <b>before</b> half-time"},
+ "live|sa-lic":{av:"SIMULTANEOUS_LIVE",sev:2,sla:5,
+   why:"inside the live rights window of the event — KSA window on Shahid, substitution is minutes-up",
+   act:"30-minute standard: tokenised-HLS route, supplier-level notice, regulator-grade receipt <b>before</b> half-time"},
  "live|eg-pre":{av:"PRE_RELEASE_LEAK",sev:1,sla:15,why:"a stream key or feed is circulating before the event",
    act:"attribution workflow; rotate distribution credentials immediately"},
  "live|eg-post":{av:"POST_WINDOW",sev:4,sla:1440,why:"the event is over; this is now an archive copy",
@@ -1167,6 +1174,9 @@ var CAL={
  "live|iq-none":{av:"NEVER_AUTHORISED",sev:5,sla:null,why:"no live rights sold in territory — an unserved market for the format",
    act:"commercial finding"},
  "live|xx-unk":{av:"UNKNOWN",sev:6,sla:null,why:"no calendar record — declines",act:"resolve the calendar first"},
+ "film|sa-lic":{av:"CONCURRENT_UNAUTHORISED",sev:3,sla:240,
+   why:"in your theatrical/streaming window on Shahid in KSA — TS/CAM tags name a physical cinema as the source",
+   act:"provenance matters more than volume here: the quality tag tells you which exhibition partner"},
  "film|eg-lic":{av:"CONCURRENT_UNAUTHORISED",sev:3,sla:240,
    why:"in your theatrical/streaming window — TS/CAM tags name a physical cinema as the source",
    act:"provenance matters more than volume here: the quality tag tells you which exhibition partner"},

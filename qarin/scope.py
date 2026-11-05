@@ -22,8 +22,8 @@ class Market:
 
 
 ARABIC_BASELINE: tuple[Market, ...] = (
-    Market("EG", "Egypt", "north_africa"),
     Market("SA", "Saudi Arabia", "gulf"),
+    Market("EG", "Egypt", "north_africa"),
     Market("AE", "United Arab Emirates", "gulf"),
     Market("DZ", "Algeria", "north_africa"),
     Market("MA", "Morocco", "north_africa"),
