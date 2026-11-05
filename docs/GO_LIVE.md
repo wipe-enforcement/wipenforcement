@@ -3,6 +3,9 @@
 The local instrument is validated. Production remains intentionally gated until
 the following inputs exist outside the public repository.
 
+The detailed handoff packet is in
+[`PRODUCTION_ONBOARDING.md`](PRODUCTION_ONBOARDING.md).
+
 ## Required inputs
 
 1. **Rights manifest** — verified works, owners, territories, windows, legal
