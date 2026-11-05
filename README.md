@@ -54,14 +54,14 @@ qarin/            the measurement core (Python, standard library only)
   scope.py        declared ten-market Arabic baseline and optional competitor
 index.html        the public page (single self-contained HTML file, served by Pages)
 docs/             THESIS.md · SOURCES.md · METHOD notes
-  tests/            229 unit tests
+  tests/            236 unit tests
 tools/            one-command contract check
 ```
 
 ## Run it
 
 ```bash
-python tools/qarin_selfcheck.py     # 71 contract checks + the unit suite
+python tools/qarin_selfcheck.py     # 82 contract checks + the unit suite
 python -m unittest discover -s tests
 ```
 
@@ -125,7 +125,7 @@ anything fails, so it is the CI gate (`.github/workflows/validate.yml`) and the
 answer to *"how do I know this instrument is honest?"* — printed, not asserted.
 
 ```
-ALL 15 CONTRACT SECTIONS PASSED — 82 checks, of which 35 are refusals — 229 UNIT TESTS GREEN
+ALL 15 CONTRACT SECTIONS PASSED — 82 checks, of which 35 are refusals — 236 UNIT TESTS GREEN
 ```
 
 ## The three ideas worth knowing before you read the code
@@ -180,9 +180,7 @@ The refusals are the product, and they are tested harder than the measurements:
   that is the same as claiming perfect visibility.
 - **No probe count read as coverage.** 110 clever queries on one surface is
   **one detector**. Keyword variety buys recall inside a surface and nothing at
-  all in fleet coverage; coverage is bought with surfaces, of which 11 are
-  declared. This is the most likely single cause of a false 95% claim, so it is
-  instrumented rather than warned about.
+  all in fleet coverage; coverage is bought with surfaces, of which 17 are declared.
 - **No media stored.** Metadata, structural fingerprints and hashes only.
 - **No learned collection policy.** What adapts is *where to look*, printed as a
   sentence. A self-modifying policy cannot be described to a regulator.

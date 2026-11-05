@@ -5,6 +5,7 @@ download media, or turn transport failures into zero findings.
 """
 from __future__ import annotations
 
+import io
 import json
 import xml.etree.ElementTree as ET
 from collections.abc import Callable
@@ -53,29 +54,68 @@ def fetch_ct_rows(url: str, *, observed_at: str, timeout: float = 15.0,
     return tuple(rows)
 
 
+#: Hard cap on fetched feed body size. XML bombs expand in memory before any
+#: parser limit is reached, so we refuse oversized payloads outright.
+_MAX_FEED_BYTES = 2 * 1024 * 1024  # 2 MiB
+#: Hard cap on elements visited per feed. A billion-laughs document can produce
+#: millions of entity expansions; we stop long before that.
+_MAX_FEED_ELEMENTS = 100_000
+#: Hard cap on nesting depth. Deeply nested XML is another expansion vector.
+_MAX_FEED_DEPTH = 256
+
+
 def fetch_rss_rows(url: str, *, observed_at: str, timeout: float = 15.0,
                    opener: Callable[..., Any] = urlopen) -> tuple[FeedRow, ...]:
     """Fetch public RSS/Atom metadata and return host-only feed rows.
 
     Only link hostnames are retained. Titles, descriptions, query strings, and
     media URLs are intentionally discarded at the connector boundary.
+
+    The payload is size-capped and parsed with :func:`xml.etree.ElementTree.iterparse`
+    under element/depth budgets so a hostile or compromised feed cannot exhaust
+    memory (billion-laughs / quadratic entity expansion). Elements are cleared as
+    they close so memory stays bounded regardless of feed size.
     """
     request = Request(url, headers={"Accept": "application/rss+xml, application/atom+xml, application/xml", "User-Agent": "QARIN-public-feed/0.1"})
     try:
         response = opener(request, timeout=timeout)
         payload = response.read()
-        root = ET.fromstring(payload)
-    except ET.ParseError as exc:
-        raise FeedError("public feed returned invalid XML") from exc
     except Exception as exc:
         raise FeedError(f"public feed request failed: {exc}") from exc
+    if len(payload) > _MAX_FEED_BYTES:
+        raise FeedError(f"public feed too large: {len(payload)} bytes")
+    if isinstance(payload, bytes):
+        payload = io.BytesIO(payload)
+    else:
+        payload = io.StringIO(payload)
     rows: list[FeedRow] = []
-    for element in root.iter():
-        if element.tag.rsplit("}", 1)[-1].lower() != "link":
-            continue
-        href = (element.attrib.get("href") or element.text or "").strip()
-        parsed = urlparse(href)
-        host = parsed.hostname
-        if parsed.scheme in ("http", "https") and host:
-            rows.append(FeedRow(host.lower().rstrip("."), observed_at, "public_feed"))
+    depth = 0
+    max_depth = 0
+    element_count = 0
+    try:
+        for event, elem in ET.iterparse(payload, events=("start", "end")):
+            element_count += 1
+            if element_count > _MAX_FEED_ELEMENTS:
+                raise FeedError("public feed too complex: element cap exceeded")
+            if event == "start":
+                depth += 1
+                if depth > max_depth:
+                    max_depth = depth
+                    if max_depth > _MAX_FEED_DEPTH:
+                        raise FeedError("public feed too deeply nested")
+            else:  # "end"
+                depth -= 1
+                if elem.tag.rsplit("}", 1)[-1].lower() == "link":
+                    href = (elem.attrib.get("href") or elem.text or "").strip()
+                    parsed = urlparse(href)
+                    host = parsed.hostname
+                    if parsed.scheme in ("http", "https") and host:
+                        rows.append(FeedRow(host.lower().rstrip("."), observed_at, "public_feed"))
+                elem.clear()
+    except ET.ParseError as exc:
+        raise FeedError("public feed returned invalid XML") from exc
+    except FeedError:
+        raise
+    except Exception as exc:
+        raise FeedError(f"public feed request failed: {exc}") from exc
     return tuple(rows)

@@ -121,11 +121,13 @@ def build_pack(cluster: Cluster, receipts: Sequence[Receipt], ledger: Ledger,
                work_id: str | None = None,
                territory: str | None = None) -> EvidencePack:
     """Assemble a pack, and refuse if it would misrepresent its own provenance."""
-    bad = [r for r in receipts if not r.verifies() and r.sealed]
+    # Every receipt in a pack must be sealed and must verify its own seal.
+    # An unsealed receipt is not evidence — it is a claim nobody can reproduce.
+    bad = [r for r in receipts if not r.sealed or not r.verifies()]
     if bad:
         raise PackRefused(
-            f"{len(bad)} receipt(s) fail their own seal; the record was edited "
-            "after capture and cannot be issued")
+            f"{len(bad)} receipt(s) are unsealed or fail their own seal; the "
+            "record cannot be issued as evidence")
     anchored = ledger.anchored_days()
     days = {r.observed_at[:10] for r in receipts}
     unanchored = tuple(sorted(d for d in days if d not in anchored))
