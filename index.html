@@ -3,562 +3,710 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>WIPE Enforcement — measured evidence of unauthorised distribution, Arabic &amp; MENA</title>
-<meta name="description" content="We count the copies, attribute them to the businesses running them, and price the gap at your own tariff. No modelled audience. No inflated loss figure. Every number reproducible from the receipts.">
+<title>WIPE Enforcement — the measurement instrument for Arabic content piracy</title>
+<meta name="description" content="We count the copies, attribute them to the operations running them, and quote the gap at your own tariff. Try the instrument: quote calculator, fleet planner, rotation classifier, rights calendar.">
 <link rel="canonical" href="https://wipenforcement.org/">
 <style>
+/* ══════════════ design tokens ══════════════ */
 :root{
-  --bg:#0b0d10; --panel:#11151a; --panel2:#0e1216; --ink:#e8eaed; --dim:#9aa3ad;
-  --line:#20262e; --accent:#e8b64c; --accent2:#5ad1a8; --bad:#ff6b6b; --good:#5ad1a8;
-  --sero:ui-serif,Georgia,"Times New Roman",serif;
-  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  --bg:#07090c; --bg2:#0b0e13; --panel:#10141b; --panel2:#151a23; --raise:#1a202b;
+  --ink:#e9edf2; --dim:#8f9aab; --faint:#5d6775;
+  --line:#1e2530; --line2:#2a3342;
+  --gold:#e8b64c; --gold2:#a87f22; --mint:#5ad1a8; --red:#ff6b6b; --sky:#6ab7ff;
+  --mono:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+  --serif:ui-serif,"Iowan Old Style","Palatino Linotype",Georgia,"Times New Roman",serif;
   --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,
          "Noto Sans Arabic","Noto Naskh Arabic",sans-serif;
+  --r:10px; --r2:14px;
+  --shadow:0 1px 0 rgba(255,255,255,.04) inset, 0 12px 32px -12px rgba(0,0,0,.6);
 }
-@media (prefers-color-scheme:light){:root{
-  --bg:#fbfaf7; --panel:#fff; --panel2:#f4f1ea; --ink:#14181d; --dim:#5b6570;
-  --line:#e2ddd2; --accent:#a06a00; --accent2:#0a7a54; --bad:#b3261e;
-}}
-*{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
-  font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
-.wrap{max-width:60rem;margin:0 auto;padding:0 1.1rem}
-a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
-a:hover{border-bottom-color:var(--accent)}
-.ar{font-family:var(--sans);direction:rtl;unicode-bidi:isolate;font-size:1.02em}
+:root[data-theme="light"]{
+  --bg:#f7f6f2; --bg2:#fffefb; --panel:#ffffff; --panel2:#f2f0e9; --raise:#eae7dd;
+  --ink:#161a20; --dim:#525c6a; --faint:#8b93a1;
+  --line:#e0dcd0; --line2:#cfc9ba;
+  --gold:#9a6b00; --gold2:#7d5700; --mint:#0a7a54; --red:#b3261e; --sky:#1a5f9e;
+  --shadow:0 1px 0 rgba(255,255,255,.7) inset, 0 10px 28px -14px rgba(30,25,10,.25);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:4.6rem;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans);
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--gold);color:#12100a}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
 
-/* ── masthead ─────────────────────────────────────────────── */
-header{border-bottom:1px solid var(--line);background:
-  linear-gradient(180deg,var(--panel) 0%,var(--bg) 100%)}
-.top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
-  padding:.85rem 0;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:.6rem;font-weight:700;letter-spacing:.02em}
-.mark{width:26px;height:26px;flex:0 0 auto}
-.brand small{display:block;font-weight:400;color:var(--dim);font-size:.62rem;
-  letter-spacing:.18em;text-transform:uppercase}
-nav{display:flex;gap:1.1rem;font-size:.82rem;color:var(--dim);flex-wrap:wrap}
-nav a{border:0}
-nav a:hover{color:var(--ink)}
+.wrap{width:min(100% - 2rem,72rem);margin-inline:auto}
+@media (max-width:640px){.wrap{width:min(100% - 1.5rem,72rem)}}
 
-/* ── hero ────────────────────────────────────────────────── */
-.hero{padding:3.4rem 0 2.4rem;border-bottom:1px solid var(--line)}
-.kicker{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--accent);margin:0 0 1.1rem}
-h1{font-family:var(--sero);font-weight:600;letter-spacing:-.02em;
-  font-size:clamp(1.95rem,6vw,3.35rem);line-height:1.08;margin:0 0 1.15rem}
-h1 em{font-style:normal;color:var(--accent);}
-.lede{font-size:clamp(1.02rem,2.4vw,1.24rem);color:var(--dim);max-width:44rem;
-  margin:0 0 1.6rem}
-.lede b{color:var(--ink);font-weight:600}
-.cta{display:flex;gap:.7rem;flex-wrap:wrap;align-items:center}
-.btn{display:inline-block;padding:.62rem 1.05rem;border-radius:6px;font-size:.87rem;
-  font-weight:600;border:1px solid var(--accent);background:var(--accent);color:#12140f}
-.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
-.btn:hover{filter:brightness(1.08)}
-.stamp{font-family:var(--mono);font-size:.7rem;color:var(--dim);margin-left:.3rem}
+/* Arabic runs: isolated so bidi never disturbs English layout */
+.ar{font-family:var(--sans);direction:rtl;unicode-bidi:isolate;display:inline}
+.mono{font-family:var(--mono)}
+.dim{color:var(--dim)}
+.faint{color:var(--faint)}
+.gold{color:var(--gold)}
+.mint{color:var(--mint)}
+.red{color:var(--red)}
 
-/* ── the inversion ────────────────────────────────────────── */
-.split{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);
-  border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:2.6rem 0 0}
-@media (max-width:640px){.split{grid-template-columns:1fr}}
-.split>div{background:var(--panel);padding:1.4rem 1.3rem}
-.split h3{margin:.15rem 0 .5rem;font-size:.78rem;font-family:var(--mono);
-  letter-spacing:.14em;text-transform:uppercase;color:var(--dim);font-weight:500}
-.split .big{font-family:var(--sero);font-size:1.22rem;line-height:1.32;margin:0 0 .6rem}
-.split p{margin:0;font-size:.9rem;color:var(--dim)}
-.them{border-top:3px solid var(--bad)}
-.us{border-top:3px solid var(--good)}
-
-/* ── sections ─────────────────────────────────────────────── */
-section{padding:2.9rem 0;border-bottom:1px solid var(--line)}
-h2{font-family:var(--sero);font-weight:600;letter-spacing:-.01em;
-  font-size:clamp(1.45rem,3.6vw,2rem);margin:0 0 .5rem;line-height:1.16}
-.sub{color:var(--dim);margin:0 0 1.7rem;max-width:46rem;font-size:.98rem}
-.num{font-family:var(--mono);font-size:.7rem;color:var(--accent);
-  letter-spacing:.14em;display:block;margin-bottom:.7rem}
-
-/* evidence cards */
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(13.5rem,1fr));gap:1px;
-  background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
-.card{background:var(--panel);padding:1.15rem 1.1rem}
-.card .v{font-family:var(--sero);font-size:1.75rem;line-height:1;letter-spacing:-.02em;
-  margin:0 0 .35rem}
-.card .v span{font-size:.95rem;color:var(--dim);font-family:var(--sans)}
-.card .l{font-size:.86rem;color:var(--ink);margin:0 0 .5rem}
-.card .s{font-family:var(--mono);font-size:.63rem;color:var(--dim);line-height:1.5;
-  word-break:break-word}
-
-/* the four objects */
-.obj{display:grid;grid-template-columns:minmax(6rem,9rem) 1fr;gap:.2rem 1.1rem;
-  padding:1.15rem 0;border-top:1px solid var(--line)}
-.obj:last-child{border-bottom:1px solid var(--line)}
-@media (max-width:560px){.obj{grid-template-columns:1fr;gap:.3rem}}
-.obj .t{font-weight:700;font-size:.95rem}
-.obj .t code{font-family:var(--mono);font-size:.78rem;color:var(--accent);
-  display:block;margin-top:.15rem;font-weight:400}
-.obj .d{font-size:.92rem;color:var(--dim);margin:0}
-.obj .d b{color:var(--ink);font-weight:600}
-
-/* quote */
-blockquote{margin:0;padding:1.3rem 1.4rem;background:var(--panel2);
-  border-left:3px solid var(--accent);border-radius:0 8px 8px 0}
-blockquote .ar{display:block;font-size:1.06rem;line-height:1.85;margin-bottom:.7rem}
-blockquote .en{font-size:.9rem;color:var(--dim);font-style:italic;margin:0 0 .6rem}
-blockquote cite{font-family:var(--mono);font-size:.66rem;color:var(--dim);
-  font-style:normal;display:block}
-
-/* rotation table */
-.rot{width:100%;border-collapse:collapse;font-size:.86rem;margin-top:.4rem}
-.rot th{text-align:left;font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--dim);font-weight:500;padding:.5rem .55rem;
+/* ══════════════ header ══════════════ */
+header{position:sticky;top:0;z-index:60;
+  background:color-mix(in srgb,var(--bg) 82%,transparent);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
   border-bottom:1px solid var(--line)}
-.rot td{padding:.5rem .55rem;border-bottom:1px solid var(--line);
-  font-family:var(--mono);font-size:.8rem;vertical-align:top}
-.rot tr.hit td:first-child{color:var(--good)}
-.rot .tag{font-family:var(--sans);font-size:.7rem;padding:.1rem .4rem;border-radius:4px;
-  border:1px solid var(--line);color:var(--dim);white-space:nowrap}
-.rot .tag.y{color:var(--good);border-color:var(--good)}
+.bar{display:flex;align-items:center;gap:1rem;height:3.6rem}
+.brand{display:flex;align-items:center;gap:.55rem;font-weight:700;letter-spacing:.01em;
+  font-size:.95rem;white-space:nowrap}
+.brand svg{width:24px;height:24px;flex:0 0 auto}
+.brand small{display:block;font:400 .58rem/1 var(--mono);color:var(--faint);
+  letter-spacing:.16em;text-transform:uppercase;margin-top:2px}
+nav{display:flex;gap:.15rem;margin-inline-start:auto;overflow-x:auto;
+  scrollbar-width:none;-ms-overflow-style:none}
+nav::-webkit-scrollbar{display:none}
+nav a{font-size:.8rem;color:var(--dim);padding:.45rem .6rem;border-radius:8px;
+  white-space:nowrap;transition:color .15s,background .15s}
+nav a:hover{color:var(--ink)}
+nav a.on{color:var(--gold);background:color-mix(in srgb,var(--gold) 10%,transparent)}
+.tbtn{margin-inline-start:.4rem;width:2.2rem;height:2.2rem;border-radius:9px;
+  border:1px solid var(--line);background:var(--panel);cursor:pointer;
+  display:grid;place-items:center;flex:0 0 auto}
+.tbtn:hover{border-color:var(--line2)}
+.tbtn svg{width:15px;height:15px}
+@media (max-width:860px){
+  .bar{flex-wrap:wrap;height:auto;padding:.55rem 0}
+  nav{order:3;width:100%;margin-inline-start:0;padding-bottom:.15rem}
+  .tbtn{margin-inline-start:auto}
+}
 
-/* the arithmetic */
-.calc{background:var(--panel);border:1px solid var(--line);border-radius:10px;
-  padding:1.3rem;margin-top:.4rem}
-.calc .row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:baseline;
-  font-family:var(--mono);font-size:.86rem}
-.calc .op{color:var(--accent)}
-.calc .n{font-weight:700}
-.calc .lbl{font-family:var(--sans);font-size:.72rem;color:var(--dim);display:block}
-.calc .out{margin-top:.9rem;padding-top:.9rem;border-top:1px dashed var(--line);
-  font-family:var(--sero);font-size:1.5rem}
-.calc .out small{font-family:var(--sans);font-size:.8rem;color:var(--dim);
-  display:block;margin-top:.3rem}
-.warn{font-size:.8rem;color:var(--dim);margin:.9rem 0 0;padding-left:.8rem;
-  border-left:2px solid var(--line)}
+/* ══════════════ hero ══════════════ */
+.hero{padding:clamp(2.6rem,7vw,5rem) 0 clamp(2rem,5vw,3.4rem);position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;inset:-40% -20% auto;height:140%;
+  background:radial-gradient(55% 45% at 70% 20%,color-mix(in srgb,var(--gold) 9%,transparent),transparent 70%),
+             radial-gradient(45% 40% at 15% 65%,color-mix(in srgb,var(--sky) 7%,transparent),transparent 70%);
+  pointer-events:none}
+.hero .wrap{position:relative}
+.kick{display:inline-flex;align-items:center;gap:.5rem;font:600 .66rem/1 var(--mono);
+  letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+  border:1px solid color-mix(in srgb,var(--gold) 35%,transparent);
+  padding:.42rem .7rem;border-radius:99px;margin-bottom:1.3rem}
+.kick .dot{width:6px;height:6px;border-radius:50%;background:var(--mint);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--mint) 22%,transparent)}
+h1{font:600 clamp(1.9rem,5.6vw,3.4rem)/1.06 var(--serif);letter-spacing:-.022em;
+  max-width:24ch;margin-bottom:1.1rem}
+h1 em{font-style:normal;color:var(--gold)}
+.lede{font-size:clamp(.98rem,2.2vw,1.16rem);color:var(--dim);max-width:52ch;margin-bottom:1.6rem}
+.lede b{color:var(--ink);font-weight:600}
+.ctas{display:flex;gap:.7rem;flex-wrap:wrap;margin-bottom:2rem}
+.btn{display:inline-flex;align-items:center;gap:.45rem;padding:.68rem 1.15rem;
+  border-radius:10px;font-size:.88rem;font-weight:650;cursor:pointer;border:1px solid transparent;
+  transition:transform .12s,filter .15s,border-color .15s}
+.btn:active{transform:translateY(1px)}
+.btn.pri{background:var(--gold);color:#141107;border-color:var(--gold)}
+.btn.pri:hover{filter:brightness(1.08)}
+.btn.sec{background:var(--panel);border-color:var(--line2);color:var(--ink)}
+.btn.sec:hover{border-color:var(--gold)}
+.chips{display:flex;gap:.5rem;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:.42rem;padding:.34rem .66rem;
+  border:1px solid var(--line);border-radius:99px;background:color-mix(in srgb,var(--panel) 70%,transparent);
+  font:500 .68rem/1 var(--mono);color:var(--dim)}
+.chip b{color:var(--ink);font-weight:650}
+.chip .ok{width:7px;height:7px;border-radius:50%;background:var(--mint)}
+.chip .no{width:7px;height:7px;border-radius:50%;background:var(--red)}
 
-/* refusal list */
-.ref{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.1rem 1.4rem;
-  margin-top:.4rem}
-.ref li{font-size:.89rem;color:var(--dim);padding:.42rem 0;
-  border-bottom:1px solid var(--line);list-style:none;display:flex;gap:.5rem}
-.ref li:before{content:"—";color:var(--accent);flex:0 0 auto}
-.ref{padding:0}
-.ref b{color:var(--ink);font-weight:600}
+/* ══════════════ sections ══════════════ */
+section{padding:clamp(2.4rem,6vw,4.2rem) 0;border-top:1px solid var(--line)}
+.shead{margin-bottom:1.8rem;max-width:60ch}
+.snum{display:block;font:600 .64rem/1 var(--mono);letter-spacing:.2em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:.7rem}
+h2{font:600 clamp(1.4rem,3.6vw,2.05rem)/1.15 var(--serif);letter-spacing:-.015em;
+  margin-bottom:.55rem}
+.ssub{color:var(--dim);font-size:.97rem;max-width:58ch}
+.ssub b{color:var(--ink)}
 
-/* proof strip */
-.proof{display:flex;flex-wrap:wrap;gap:.5rem;font-family:var(--mono);font-size:.72rem;
-  margin-top:1rem}
-.proof span{padding:.32rem .6rem;border:1px solid var(--line);border-radius:5px;
-  color:var(--dim);background:var(--panel)}
-.proof span b{color:var(--good);font-weight:600}
+/* ══════════════ instrument (tabs) ══════════════ */
+.tabs{display:flex;gap:.3rem;overflow-x:auto;scrollbar-width:none;
+  padding:.28rem;border:1px solid var(--line);border-radius:13px;background:var(--panel);
+  margin-bottom:1.1rem}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:1 0 auto;padding:.6rem .85rem;border-radius:9px;border:0;background:transparent;
+  font-size:.83rem;font-weight:600;color:var(--dim);cursor:pointer;white-space:nowrap;
+  display:flex;align-items:center;gap:.45rem;transition:background .15s,color .15s}
+.tab .n{font:600 .62rem/1 var(--mono);color:var(--faint)}
+.tab:hover{color:var(--ink)}
+.tab.on{background:var(--raise);color:var(--ink);box-shadow:var(--shadow)}
+.tab.on .n{color:var(--gold)}
+.panel{display:none;animation:fade .25s ease}
+.panel.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r2);
+  padding:clamp(1rem,3vw,1.5rem)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+@media (max-width:820px){.grid2,.grid3{grid-template-columns:1fr}}
+.field{margin-bottom:1rem}
+.field label{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem;
+  font-size:.78rem;font-weight:600;color:var(--dim);margin-bottom:.4rem}
+.field label .val{font-family:var(--mono);color:var(--gold);font-weight:600;font-size:.8rem}
+.field .hint{font-size:.7rem;color:var(--faint);margin-top:.3rem;line-height:1.45}
+input[type=text],input[type=number],select{width:100%;padding:.58rem .7rem;
+  border:1px solid var(--line2);border-radius:9px;background:var(--bg2);color:var(--ink);
+  font-size:.9rem;transition:border-color .15s}
+input:focus,select:focus{border-color:var(--gold);outline:none}
+input[type=range]{width:100%;accent-color:var(--gold);height:1.6rem;cursor:pointer}
+.switch{display:flex;align-items:center;gap:.6rem;font-size:.82rem;color:var(--dim);
+  cursor:pointer;user-select:none;padding:.3rem 0}
+.switch input{accent-color:var(--gold);width:1.05rem;height:1.05rem;cursor:pointer}
+.out{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);
+  padding:1rem 1.1rem;min-height:8.5rem}
+.out .big{font:600 clamp(1.5rem,4.5vw,2.1rem)/1.1 var(--serif);letter-spacing:-.02em;
+  margin:.3rem 0}
+.out .big.refuse{color:var(--faint);font-size:1.15rem;font-family:var(--sans);
+  font-weight:600;line-height:1.4}
+.out .lbl{font:600 .62rem/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--faint)}
+.out .expl{font-size:.8rem;color:var(--dim);line-height:1.55;margin-top:.55rem}
+.out .expl code{font-family:var(--mono);font-size:.74rem;color:var(--gold);
+  background:color-mix(in srgb,var(--gold) 9%,transparent);padding:.1rem .3rem;border-radius:5px}
+.bar-track{height:8px;border-radius:99px;background:var(--raise);overflow:hidden;
+  position:relative;margin:.55rem 0 .3rem}
+.bar-fill{position:absolute;inset:0 auto 0 0;border-radius:99px;
+  background:linear-gradient(90deg,var(--gold2),var(--gold));transition:width .3s ease}
+.bar-lo,.bar-hi{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);
+  opacity:.55;border-radius:2px}
+.rows{display:grid;gap:.3rem;margin-top:.7rem}
+.row{display:flex;justify-content:space-between;gap:.8rem;font-size:.8rem;
+  padding:.42rem .55rem;border-radius:8px;background:var(--panel2)}
+.row .k{color:var(--dim)}
+.row .v{font-family:var(--mono);font-weight:600}
+.stamp{display:inline-flex;align-items:center;gap:.4rem;font:600 .64rem/1 var(--mono);
+  letter-spacing:.08em;padding:.34rem .55rem;border-radius:7px;margin-top:.7rem}
+.stamp.m{color:var(--mint);background:color-mix(in srgb,var(--mint) 11%,transparent);
+  border:1px solid color-mix(in srgb,var(--mint) 30%,transparent)}
+.stamp.x{color:var(--red);background:color-mix(in srgb,var(--red) 10%,transparent);
+  border:1px solid color-mix(in srgb,var(--red) 30%,transparent)}
+.stamp.u{color:var(--faint);background:var(--panel2);border:1px solid var(--line)}
+.demo-note{font-size:.72rem;color:var(--faint);margin-top:.9rem;line-height:1.5;
+  padding-left:.7rem;border-left:2px solid var(--line2)}
 
-/* footer / cta */
-footer{padding:2.6rem 0 3.2rem}
-.foot{display:grid;grid-template-columns:1.3fr 1fr;gap:1.6rem}
-@media (max-width:640px){.foot{grid-template-columns:1fr}}
-.foot h4{margin:0 0 .5rem;font-family:var(--sero);font-size:1.1rem;font-weight:600}
-.foot p,.foot li{font-size:.88rem;color:var(--dim);margin:0 0 .5rem}
-.foot ul{padding-left:1.05rem;margin:0}
-.fine{font-family:var(--mono);font-size:.66rem;color:var(--dim);margin-top:2rem;
-  padding-top:1rem;border-top:1px solid var(--line);line-height:1.7}
+/* verdict pills */
+.pill{display:inline-block;font:700 .62rem/1 var(--mono);letter-spacing:.1em;
+  padding:.32rem .55rem;border-radius:99px;text-transform:uppercase}
+.pill.exact{color:#0e1207;background:var(--mint)}
+.pill.stock{color:#141107;background:var(--gold)}
+.pill.look{color:var(--sky);border:1px solid color-mix(in srgb,var(--sky) 45%,transparent)}
+.pill.none{color:var(--faint);border:1px dashed var(--line2)}
+
+/* ══════════════ surfaces grid ══════════════ */
+.surf{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.55rem}
+.sc{border:1px solid var(--line);border-radius:11px;padding:.7rem .75rem;
+  background:var(--panel);cursor:pointer;transition:border-color .15s,transform .12s;
+  position:relative;overflow:hidden}
+.sc:hover{border-color:var(--line2);transform:translateY(-1px)}
+.sc.on{border-color:var(--gold)}
+.sc .nm{font:650 .78rem/1.25 var(--mono);display:flex;align-items:center;gap:.4rem}
+.sc .st{width:7px;height:7px;border-radius:50%;flex:0 0 auto}
+.sc .st.live{background:var(--mint)}
+.sc .st.plan{background:var(--faint)}
+.sc .d{font-size:.68rem;color:var(--dim);margin-top:.35rem;line-height:1.45}
+.sc .why{display:none;font-size:.72rem;color:var(--dim);margin-top:.5rem;
+  padding-top:.5rem;border-top:1px dashed var(--line2);line-height:1.5}
+.sc.on .why{display:block}
+@media (prefers-reduced-motion:reduce){.sc:hover{transform:none}}
+
+/* ══════════════ findings ══════════════ */
+.find{display:grid;grid-template-columns:5rem 1fr;gap:1.1rem;padding:1.3rem 0;
+  border-top:1px solid var(--line)}
+.find:last-of-type{border-bottom:1px solid var(--line)}
+@media (max-width:560px){.find{grid-template-columns:1fr;gap:.4rem}}
+.find .big{font:600 clamp(1.6rem,4vw,2.2rem)/1 var(--serif);color:var(--gold);
+  letter-spacing:-.02em}
+.find .big small{display:block;font:600 .58rem/1 var(--mono);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--faint);margin-top:.4rem}
+.find h3{font:650 1.02rem/1.3 var(--sans);margin-bottom:.4rem}
+.find p{font-size:.88rem;color:var(--dim);line-height:1.6}
+.find p b{color:var(--ink)}
+blockquote{margin:1rem 0;padding:1rem 1.15rem;background:var(--panel2);
+  border-left:3px solid var(--gold);border-radius:0 10px 10px 0}
+blockquote .ar{display:block;font-size:1.02rem;line-height:1.9;text-align:right;
+  margin-bottom:.5rem}
+blockquote .en{font-size:.82rem;color:var(--dim);font-style:italic}
+blockquote cite{display:block;font:500 .64rem/1.5 var(--mono);color:var(--faint);
+  margin-top:.5rem;font-style:normal}
+
+/* ══════════════ tables ══════════════ */
+.tbl{width:100%;border-collapse:collapse;font-size:.84rem}
+.tbl th{font:600 .62rem/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;
+  color:var(--faint);text-align:start;padding:.55rem .6rem;border-bottom:1px solid var(--line2)}
+.tbl td{padding:.55rem .6rem;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl tr:last-child td{border-bottom:0}
+.tbl .num{font-family:var(--mono);font-weight:600;text-align:end}
+.scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch;
+  border:1px solid var(--line);border-radius:var(--r2);background:var(--panel)}
+.scroll-x .tbl th:first-child,.scroll-x .tbl td:first-child{position:sticky;left:0;
+  background:var(--panel)}
+
+/* ══════════════ status board ══════════════ */
+.board{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:.75rem}
+.bi{border:1px solid var(--line);border-radius:12px;padding:.95rem 1rem;background:var(--panel)}
+.bi .h{display:flex;align-items:center;justify-content:space-between;gap:.5rem;
+  font:650 .72rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.bi .v{font:600 1.5rem/1.1 var(--serif);letter-spacing:-.02em;margin:.45rem 0 .15rem}
+.bi .d{font-size:.72rem;color:var(--dim);line-height:1.5}
+.bi .v.ok{color:var(--mint)}
+.bi .v.wait{color:var(--gold)}
+
+/* ══════════════ roadmap ══════════════ */
+.phase{display:grid;grid-template-columns:8.5rem 1fr;gap:1rem;padding:1.1rem 0;
+  border-top:1px solid var(--line)}
+.phase:last-child{border-bottom:1px solid var(--line)}
+@media (max-width:640px){.phase{grid-template-columns:1fr;gap:.35rem}}
+.phase .when{font:650 .74rem/1.5 var(--mono);color:var(--gold)}
+.phase .when small{display:block;color:var(--faint);font-weight:500}
+.phase h4{font:650 .95rem/1.3 var(--sans);margin-bottom:.3rem}
+.phase p{font-size:.84rem;color:var(--dim);line-height:1.55}
+.phase .done{color:var(--mint)}
+
+/* ══════════════ footer ══════════════ */
+footer{border-top:1px solid var(--line);padding:2.6rem 0 3.4rem;
+  background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--panel) 45%,transparent))}
+.fgrid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:1.6rem}
+@media (max-width:760px){.fgrid{grid-template-columns:1fr}}
+.fgrid h4{font:650 .95rem/1.3 var(--sans);margin-bottom:.6rem}
+.fgrid p,.fgrid li{font-size:.82rem;color:var(--dim);line-height:1.6;margin-bottom:.45rem}
+.fgrid ul{list-style:none}
+.fgrid li{padding-inline-start:.9rem;position:relative}
+.fgrid li:before{content:"→";position:absolute;inset-inline-start:0;color:var(--gold);
+  font-size:.72rem}
+.fine{font:500 .66rem/1.75 var(--mono);color:var(--faint);margin-top:2.2rem;
+  padding-top:1.1rem;border-top:1px solid var(--line)}
 </style>
 </head>
 <body>
 
+<!-- ═══════════════ header ═══════════════ -->
 <header>
-  <div class="wrap top">
-    <div class="brand">
-      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
-        <circle cx="16" cy="16" r="14.5" fill="none" stroke="var(--accent)" stroke-width="1.4"/>
-        <path d="M16 3.5 L16 28.5 M3.5 16 L28.5 16" stroke="var(--line)" stroke-width="1"/>
-        <circle cx="16" cy="16" r="5.4" fill="none" stroke="var(--accent2)" stroke-width="1.6"/>
-        <circle cx="16" cy="16" r="1.7" fill="var(--accent)"/>
+  <div class="wrap bar">
+    <a class="brand" href="#top" aria-label="WIPE Enforcement home">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="14" fill="none" stroke="var(--gold)" stroke-width="1.6"/>
+        <circle cx="16" cy="16" r="5.2" fill="none" stroke="var(--mint)" stroke-width="1.6"/>
+        <circle cx="16" cy="16" r="1.8" fill="var(--gold)"/>
+        <path d="M16 2v6M16 24v6M2 16h6M24 16h6" stroke="var(--gold)" stroke-width="1.4" stroke-linecap="round"/>
       </svg>
-      <div>WIPE Enforcement<small>wipenforcement.org</small></div>
-    </div>
-    <nav>
-      <a href="#evidence">Evidence</a>
+      <span>WIPE Enforcement<small>wipenforcement.org</small></span>
+    </a>
+    <nav id="nav" aria-label="Sections">
+      <a href="#instrument" class="on">Instrument</a>
+      <a href="#findings">Findings</a>
+      <a href="#surfaces">Surfaces</a>
       <a href="#method">Method</a>
-      <a href="#forecast">Forecast</a>
-      <a href="#pricing">For rightsholders</a>
-      <a href="#proof">Verification</a>
+      <a href="#status">Live status</a>
+      <a href="#holders">Rightsholders</a>
+      <a href="#roadmap">Roadmap</a>
     </nav>
+    <button class="tbtn" id="theme" aria-label="Toggle light / dark">
+      <svg id="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg id="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
   </div>
 </header>
 
+<!-- ═══════════════ hero ═══════════════ -->
+<main id="top">
 <div class="hero">
   <div class="wrap">
-    <p class="kicker">Arabic &amp; MENA audiovisual · measurement infrastructure</p>
-    <h1>We do not estimate your losses.<br>We <em>count the copies</em>, name who is<br>selling them, and quote the gap.</h1>
-    <p class="lede">Twenty years of anti-piracy reporting has produced audience
-      estimates nobody can disprove — which is the same as nobody believing.
-      <b>Demand is uncountable. Supply is enumerable.</b> Every unauthorised
-      offering has to be public somewhere in order to earn anything, so we
-      measure that, and we never ask a single question about what a viewer would
-      have paid.</p>
-    <div class="cta">
-      <a class="btn" href="#pricing">Request a territory reading</a>
-      <a class="btn ghost" href="#method">Read the method first</a>
-      <span class="stamp">every figure carries a receipt, a date and a hash</span>
+    <span class="kick"><span class="dot"></span>Arabic &amp; MENA audiovisual · measurement infrastructure</span>
+    <h1>Piracy is not measured in viewers.<br>It is measured in <em>copies</em> —<br>and copies can be counted.</h1>
+    <p class="lede">Demand is uncountable; <b>supply is enumerable</b>. Every
+      unauthorised offering must be public somewhere to earn anything. We count
+      those copies, cluster them into the operations running them, watch the
+      reappearance clock, and price the gap at <b>your own tariff</b> — never a
+      modelled loss.</p>
+    <div class="ctas">
+      <a class="btn pri" href="#instrument">Try the instrument ↓</a>
+      <a class="btn sec" href="#method">Read the method</a>
     </div>
-
-    <div class="split">
-      <div class="them">
-        <h3>The industry asks</h3>
-        <p class="big">How many people watched illegally?</p>
-        <p>Requires assuming a counterfactual no one can observe. Published
-          “loss” figures differ by 4× purely because of where each vendor sets
-          that dial. Unfalsifiable — therefore worthless, and known to be.</p>
-      </div>
-      <div class="us">
-        <h3>WIPE asks</h3>
-        <p class="big">Where is it offered, who runs it, and what does it earn?</p>
-        <p>Every term is observable, countable, and checkable by a hostile third
-          party from our receipts alone. A claim that can be broken is a claim
-          you can win.</p>
-      </div>
+    <div class="chips" id="chips">
+      <span class="chip"><span class="ok"></span>engine <b>187 tests green</b></span>
+      <span class="chip"><span class="ok"></span>repo <b>public · CI passing</b></span>
+      <span class="chip"><span class="ok"></span>this page <b>live</b></span>
+      <span class="chip"><span class="no"></span>collector feeds <b>not yet wired</b></span>
+      <span class="chip"><span class="no"></span>wipenforcement.org <b>DNS pending (owner)</b></span>
     </div>
   </div>
 </div>
 
-<section id="evidence">
+<!-- ═══════════════ the instrument ═══════════════ -->
+<section id="instrument">
   <div class="wrap">
-    <span class="num">01 · THE SHAPE OF THE MARKET</span>
-    <h2>Documented, dated, and not ours to argue with</h2>
-    <p class="sub">These come from rights-holder filings and enforcement records.
-      We cite them to establish what the ecosystem looks like — <b>no number we
-      report is derived from them.</b> Third-party visit figures are scale
-      context from contested filings, and are labelled as such.</p>
-    <div class="cards">
-      <div class="card"><p class="v">155<span>M / mo</span></p>
-        <p class="l">Shahed4U at takedown — 68,000 series, 18,700 films, 118+ domains</p>
-        <p class="s">ACE + Egyptian authorities, 2024</p></div>
-      <div class="card"><p class="v">50<span>M / mo</span></p>
-        <p class="l">MyCima before its shutdown — ~12,000 films, ~26,000 series</p>
-        <p class="s">TorrentFreak, Mar 2023</p></div>
-      <div class="card"><p class="v">~70</p>
-        <p class="l">near-identical domains in rotation around that one network</p>
-        <p class="s">myciiima.autos · .bond · .boats · .makeup · .monster</p></div>
-      <div class="card"><p class="v">1,117</p>
-        <p class="l">websites blocked by UAE MoE with TDRA, incl. “InstaBlock”</p>
-        <p class="s">protecting MBC, OSN, beIN</p></div>
-      <div class="card"><p class="v">350<span>+</span></p>
-        <p class="l">pirate websites launched against MBC since 2014</p>
-        <p class="s">MBC submission to USTR, 2018</p></div>
-      <div class="card"><p class="v">85<span>+ domains</span></p>
-        <p class="l">one live-sports ring (Livehd7), dismantled Oct 2024</p>
-        <p class="s">ACE + Egyptian authorities</p></div>
-      <div class="card"><p class="v">66<span>%</span></p>
-        <p class="l">of takedown notices ignored entirely; 90% of streams back within 24h</p>
-        <p class="s">AAPA, May 2026</p></div>
-      <div class="card"><p class="v">6<span>%</span></p>
-        <p class="l">answered inside the 30-minute window that live events need</p>
-        <p class="s">AAPA, May 2026</p></div>
+    <div class="shead">
+      <span class="snum">01 · The instrument, live in your browser</span>
+      <h2>Four calculators. Same algebra as the engine. Nothing invented.</h2>
+      <p class="ssub">These are not mock-ups — they are the platform's actual
+        arithmetic ported to JavaScript: <b>null-contagious estimates, lognormal
+        intervals, bounded shares, per-surface coverage accounting</b>. Where an
+        input is missing, the output refuses. Every refusal here is the
+        instrument working.</p>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Instrument modules">
+      <button class="tab on" role="tab" aria-selected="true" data-p="p-quote"><span class="n">Q</span>Quote calculator</button>
+      <button class="tab" role="tab" aria-selected="false" data-p="p-fleet"><span class="n">F</span>Fleet planner</button>
+      <button class="tab" role="tab" aria-selected="false" data-p="p-rot"><span class="n">R</span>Rotation classifier</button>
+      <button class="tab" role="tab" aria-selected="false" data-p="p-cal"><span class="n">C</span>Rights calendar</button>
+    </div>
+
+    <!-- ── quote ─ -->
+    <div class="panel on" id="p-quote" role="tabpanel">
+      <div class="grid2">
+        <div class="card">
+          <div class="field">
+            <label>Measured pirate audience (views) <span class="val" id="q-vv">2,000,000</span></label>
+            <input type="range" id="q-views" min="0" max="8" step="0.01" value="6.3010">
+            <p class="hint">Observed audience on the surfaces we can see — e.g. Telegram post view-counters. Log scale; this is a <b>measured</b> input, not an estimate.</p>
+          </div>
+          <div class="field">
+            <label>Fleet coverage <span class="val" id="q-cw">67%</span></label>
+            <input type="range" id="q-cov" min="0" max="100" step="1" value="67">
+            <p class="hint">The fraction of the pirate population our detectors actually saw — measured by capture–recapture, never assumed. Set it to <b>unknown</b> and watch the quote refuse.</p>
+          </div>
+          <div class="field">
+            <label class="switch"><input type="checkbox" id="q-covunk"> Coverage unknown (no measurement yet)</label>
+          </div>
+          <div class="field">
+            <label>Your published tariff (USD / 1k views) <span class="val" id="q-tw">$3.50</span></label>
+            <input type="range" id="q-tar" min="0" max="15" step="0.1" value="3.5">
+            <p class="hint">The only assumption in the calculation is a number <b>you</b> supply. Zero means no tariff published → no value quoted.</p>
+          </div>
+          <div class="field">
+            <label>Displacement rate <span class="val" id="q-dw">25%</span></label>
+            <input type="range" id="q-disp" min="0" max="40" step="1" value="25">
+            <p class="hint">Calibrated band [10–40%] per market from client ground truth. <b>Never 1:1</b> — assuming so inflates any loss figure 4×.</p>
+          </div>
+        </div>
+        <div class="card">
+          <span class="lbl">Output</span>
+          <div class="out" id="q-out" aria-live="polite"></div>
+          <p class="demo-note">The quotation is <b>not a loss figure</b>. It is
+            measured supply × your tariff, arithmetic shown, interval propagated
+            through every input. Markets we cannot price are reported as counts
+            and listed beside the total, never omitted from it.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── fleet ── -->
+    <div class="panel" id="p-fleet" role="tabpanel">
+      <div class="grid2">
+        <div class="card">
+          <div class="field">
+            <label>Per-detector reach <span class="val" id="f-pw">20%</span></label>
+            <input type="range" id="f-p" min="2" max="60" step="1" value="20">
+            <p class="hint">What fraction of the pirate population one detector sees, assuming each is <b>mutually independent</b> — the honest upper bound.</p>
+          </div>
+          <div class="field">
+            <label>Detectors in the fleet <span class="val" id="f-kw">5</span></label>
+            <input type="range" id="f-k" min="1" max="20" step="1" value="5">
+          </div>
+          <div class="field">
+            <label>Coverage target <span class="val" id="f-tw">95%</span></label>
+            <input type="range" id="f-t" min="50" max="99" step="1" value="95">
+          </div>
+          <div class="field">
+            <label>Correlation between detectors <span class="val" id="f-cw">independent</span></label>
+            <input type="range" id="f-c" min="0" max="90" step="5" value="0">
+            <p class="hint">Real crawlers overlap. Drag it: correlation is why a sixth copy of an existing crawler buys almost nothing, while one orthogonal source buys a lot. This is the procurement question, not an engineering one.</p>
+          </div>
+        </div>
+        <div class="card">
+          <span class="lbl">Output</span>
+          <div class="out" id="f-out" aria-live="polite"></div>
+          <p class="demo-note">The 95% figure in the industry brief is a
+            <b>fleet-architecture decision with an integer answer</b>, not an
+            aspiration. The planner prints it.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── rotation ── -->
+    <div class="panel" id="p-rot" role="tabpanel">
+      <div class="grid2">
+        <div class="card">
+          <div class="field">
+            <label>Observe a hostname (from a CT log or drop feed)</label>
+            <input type="text" id="r-in" value="w13.alpha.example" spellcheck="false"
+                   autocomplete="off" placeholder="something.example">
+            <p class="hint">The production path consumes feeds we do not control —
+              certificate transparency and the redemption drop list — and asks of
+              each arriving name only: <b>does the grammar explain it?</b> Type or
+              edit any name.</p>
+          </div>
+          <div class="field">
+            <label>Or try recorded constructions</label>
+            <div class="chips" style="flex-wrap:wrap">
+              <button class="btn sec" style="padding:.4rem .7rem;font-size:.75rem" data-host="alpha-official.example">brand-official</button>
+              <button class="btn sec" style="padding:.4rem .7rem;font-size:.75rem" data-host="w99.alpha.example">unlisted subdomain</button>
+              <button class="btn sec" style="padding:.4rem .7rem;font-size:.75rem" data-host="beetaav.xyz">vowel doubling</button>
+              <button class="btn sec" style="padding:.4rem .7rem;font-size:.75rem" data-host="recipes-daily.net">unrelated</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <span class="lbl">Classification</span>
+          <div class="out" id="r-out" aria-live="polite"></div>
+          <p class="demo-note"><b>Runs on the public example corpus</b> (three
+            invented brands). The real target set is private intel, deliberately
+            never published: a machine-readable watch list tells operators exactly
+            which patterns are monitored, and every pattern not on it becomes
+            free. The machinery is identical; only the corpus is withheld.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── calendar ── -->
+    <div class="panel" id="p-cal" role="tabpanel">
+      <div class="grid2">
+        <div class="card">
+          <div class="field">
+            <label>The work</label>
+            <select id="c-kind">
+              <option value="series">Ramadan series (30 eps, airs 17 Feb 2026)</option>
+              <option value="live">Live final — Saudi Pro League (match day)</option>
+              <option value="film">Theatrical film (releases 1 Mar 2026)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Territory &amp; licence state</label>
+            <select id="c-terr">
+              <option value="eg-lic">Egypt — licensed, window open (Shahid verified)</option>
+              <option value="eg-pre">Egypt — licensed, but copy seen <b>before</b> first broadcast</option>
+              <option value="eg-post">Egypt — licence expired last September</option>
+              <option value="iq-none">Iraq — never licensed anywhere</option>
+              <option value="xx-unk">Territory with no calendar record</option>
+            </select>
+          </div>
+        </div>
+        <div class="card">
+          <span class="lbl">Classification &amp; response</span>
+          <div class="out" id="c-out" aria-live="polite"></div>
+          <p class="demo-note">Severity comes from the copy's <b>relationship to
+            the rights calendar</b>, never from its size. A live final with 500
+            simultaneous viewers outranks a 3-year-old series with 5 million —
+            and a pre-release leak is the only class with a defendant the network
+            already knows by name.</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
+<!-- ═══════════════ findings ═══════════════ -->
+<section id="findings">
+  <div class="wrap">
+    <div class="shead">
+      <span class="snum">02 · What the research found</span>
+      <h2>The supply side publishes its own search method — and its own rotation</h2>
+      <p class="ssub">44 dated sources, all registered with provenance in
+        <code class="mono">docs/SOURCES.md</code>. Three structural findings
+        changed the architecture of the platform.</p>
+    </div>
+
+    <div class="find">
+      <div class="big">SEO<small>the method, verbatim</small></div>
+      <div>
+        <h3>Pirate networks bid on each other's names. Searching like an expert works because it is reverse-engineered supply-side advertising.</h3>
+        <blockquote>
+          <span class="ar">نمط عناوين البحث الشائعة: اسم الفيلم + السنة + «مدبلج» + «HD أون لاين» + أسماء مواقع المشاهدة للظهور في نتائج البحث</span>
+          <p class="en">"The common search-title pattern: film name + year + 'dubbed' + 'HD online' + the names of rival sites, in order to appear in search results."</p>
+          <cite>One of the region's largest pirate networks, in its own page metadata · cited source #15</cite>
+        </blockquote>
+        <p>Brand co-occurrence in one meta block is therefore <b>attribution</b>, not accident — a lookalike domain was recorded carrying seven rival brands at once. And the quality tag is a confession: <code class="mono">WEB-DL</code> names a licensee's platform as the source; <code class="mono">TS/CAM</code> names a physical cinema. <b>Dubbed vs subtitled</b> is a demographic read on where the operator thinks the money is — obtained without asking a single viewer.</p>
+      </div>
+    </div>
+
+    <div class="find">
+      <div class="big">CT logs<small>the blind spot, closed</small></div>
+      <div>
+        <h3>Subdomain rotation produces no WHOIS event at all — certificate transparency is the only surface that sees it.</h3>
+        <p>Rotation is not only registering a new domain; it is
+          <code class="mono">w&lt;n&gt;.&lt;brand&gt;.&lt;tld&gt;</code> →
+          <code class="mono">w&lt;n+1&gt;</code>, and the apex is never touched, so
+          a registration monitor is <b>structurally blind</b> to the corpus's most
+          mechanical move. But an operator cannot serve TLS without a certificate
+          for each name — and the name appears in the log <b>before the site
+          serves anything</b>. The recognition layer therefore consumes CT and the
+          redemption drop list, and classifies what arrives. It never generates
+          target lists: watching hypothetical names is watching mostly things that
+          don't exist, and a public watch list is an evasion manual.</p>
+      </div>
+    </div>
+
+    <div class="find">
+      <div class="big">1 → 100<small>the supplier, not the site</small></div>
+      <div>
+        <h3>Separate brand families run one identical application route. The enforcement target is the vendor.</h3>
+        <p>Hosts of two unrelated brand families were recorded serving the same
+          script, the same parameter, the same fixed-width hex id — the
+          <b>piracy-as-a-service layer</b> the MPA documents by name ("off-the-shelf
+          streaming operations"). One notice to a supplier removes a hundred
+          sites; one notice to a site removes one. Route signatures are kept
+          strictly separate from operator attribution: <b>a shared vendor must
+          never be allowed to look like a shared owner.</b> And the app layer
+          holds the fastest path in the system: impersonating a legal platform's
+          mark is removable under store policy — no infringement proof, no
+          jurisdiction, no takedown.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ surfaces ═══════════════ -->
+<section id="surfaces">
+  <div class="wrap">
+    <div class="shead">
+      <span class="snum">03 · The fleet</span>
+      <h2>17 surfaces. Coverage is bought with surfaces, never with query wording.</h2>
+      <p class="ssub">A thousand clever queries on one search index is <b>one
+        detector</b>. Tap any surface — the platform states plainly which are
+        wired, which are planned, and why each is independent of the others.</p>
+    </div>
+    <div class="surf" id="surfgrid"></div>
+  </div>
+</section>
+
+<!-- ═══════════════ method ═══════════════ -->
 <section id="method">
   <div class="wrap">
-    <span class="num">02 · WHY SEARCHING WORKS</span>
-    <h2>The supply side publishes its own search method</h2>
-    <p class="sub">We did not infer how Arabic pirate content is found. One of the
-      largest networks in the region describes its own titling convention, in its
-      own meta description, and the reason is commercial: it bids on its rivals.</p>
-
-    <blockquote>
-      <span class="ar">نمط عناوين البحث الشائعة: اسم الفيلم + السنة + «مدبلج» + «HD أون لاين» + أسماء مواقع المشاهدة (ماي سيما، شاهد فور يو، عرب سيد) للظهور في نتائج البحث</span>
-      <p class="en">“The common search-title pattern: film name + year + ‘dubbed’ +
-        ‘HD online’ + the names of rival sites (MyCima, Shahid4U, ArabSeed), in
-        order to appear in search results.”</p>
-      <cite>Laroza network, page meta description · larroza.homes / larroza.quest · 2026</cite>
-    </blockquote>
-
-    <p class="sub" style="margin-top:1.6rem">An expert searcher finds more by
-      querying the same way, for exactly that reason: they are not searching for
-      the work, they are searching the way the trade advertises it. Which means
-      the technique is also a <b>reading of the operator</b> — and it has two
-      applications the practitioners never intended.</p>
-
-    <div class="obj">
-      <div class="t">Brand stacking is attribution<code>brand_signal()</code></div>
-      <p class="d">A lookalike <code>eegebest.com</code> was found carrying keyword
-        metadata for the <b>entire family</b> — egybest, mycima, wecima, cima4u,
-        arabseed, akwam, faselhd. Nobody who owns one site bids on six competitors.
-        Whoever registers rotation stock in bulk advertises for all of it. One
-        mention is a mention; three or more in a single meta block is
-        <b>rotation stock</b>.</p>
+    <div class="shead">
+      <span class="snum">04 · Method &amp; evidence discipline</span>
+      <h2>Every number carries a receipt, a grade, and the reason it might be wrong</h2>
     </div>
-    <div class="obj">
-      <div class="t">Dub vs sub is a market read<code>language_mode</code></div>
-      <p class="d">Dubbing is expensive and aims at Gulf and Egyptian audiences.
-        Subtitling is cheap and aims at the Levant and Maghreb. <b>Which one an
-        operator invests in tells you where they think the money is</b> — a
-        demographic signal obtained without asking a single viewer, which is the
-        only demographic data we trust.</p>
-    </div>
-    <div class="obj">
-      <div class="t">Quality tags name the leak source<code>provenance</code></div>
-      <p class="d"><code>WEB-DL</code> means an extract from a legal platform — a
-        supply-chain fact about a <b>licensee</b>. <code>TS</code>/<code>CAM</code>
-        means a camera in a physical cinema. <code>SCREENER</code> means a review
-        copy. Different crimes, different defendants, and the pirate prints which
-        one it was, in the filename, to advertise quality to its own customers.</p>
-    </div>
-    <div class="obj">
-      <div class="t">Arabic writes the tech in Arabic script<code>arabic_technical_terms()</code></div>
-      <p class="d">اتش دي is HD. بلوراي is BluRay. بوكس اوفيس is box office.
-        دي في دي is DVD. A parser looking for the <b>Arabic translation</b> of
-        these words finds nothing, because nobody uses it — and generic Arabic NLP
-        misses this stratum entirely. Titles are also bidirectional, so a
-        monolingual generator misses the mixed-script layer too.</p>
-    </div>
-  </div>
-</section>
-
-<section id="forecast">
-  <div class="wrap">
-    <span class="num">03 · THE PART THAT CHANGES THE TIMING</span>
-    <h2>Rotation stock is bought in advance, so the next domain is predictable</h2>
-    <p class="sub">Egypt shut MyCima down. It returned within days as WeCima on
-      <code>wecima.tube</code> — and the <code>weciima.*</code> replacements had
-      been registered <b>before</b> the rebrand. Vowel doubling plus a fixed set of
-      cheap new gTLDs is a grammar, and a grammar enumerates. We induced the rules
-      from the observed pairs, then tested the generator against the record:</p>
-
-    <table class="rot">
-      <thead><tr><th>Predicted from the brand name alone</th><th>Documented</th><th>Note</th></tr></thead>
-      <tbody>
-        <tr class="hit"><td>myciiima.autos</td><td><span class="tag y">observed</span></td><td>43.3M visits/mo at its peak</td></tr>
-        <tr class="hit"><td>myciiima.bond</td><td><span class="tag y">observed</span></td><td rowspan="4">the ~70-domain rotation stock recorded at shutdown</td></tr>
-        <tr class="hit"><td>myciiima.boats</td><td><span class="tag y">observed</span></td></tr>
-        <tr class="hit"><td>myciiima.makeup</td><td><span class="tag y">observed</span></td></tr>
-        <tr class="hit"><td>myciiima.monster</td><td><span class="tag y">observed</span></td></tr>
-        <tr class="hit"><td>weciima.*</td><td><span class="tag y">observed</span></td><td>pre-registered before the rebrand</td></tr>
-        <tr class="hit"><td>eegebest.com</td><td><span class="tag y">observed</span></td><td>carried the whole family in its meta keywords</td></tr>
-      </tbody>
-    </table>
-
-    <p class="sub" style="margin-top:1.4rem"><b>5 of 5 of the documented MyCima
-      stock, from the brand name and nothing else.</b> So a domain that is
-      registered, in that TLD set, carrying a known brand token, and resolving to
-      nothing yet is a <b>scheduled appearance</b>. Watching the WHOIS/RMRD
-      new-domain feed for that set gives notice in days, before the traffic moves —
-      the only moment a network can be interrupted rather than merely observed.
-      Everything else in this industry watches the past.</p>
-
-    <div class="obj">
-      <div class="t">The registration feed is not enough<code>certificate_transparency</code></div>
-      <p class="d">We found the hole in our own method while researching it.
-        Rotation is not only <em>registering a new domain</em> — it is
-        <span class="ar">w12.mycima.movie</span> →
-        <span class="ar">w13.mycima.movie</span>, and that produces
-        <b>no WHOIS event whatsoever</b>, because the apex domain is never
-        touched. A registration monitor is structurally blind to the most common
-        rotation in the corpus. Certificate transparency is the only surface that
-        sees it: an operator cannot serve TLS without a certificate for each name,
-        and the name appears in the log <b>before the site serves anything</b>.
-        So we watch the certificates, and the drop list besides — a
-        brand-adjacent name reaching redemption is a name about to change hands.</p>
-    </div>
-    <div class="obj">
-      <div class="t">One route links brands that look unrelated<code>route_of()</code></div>
-      <p class="d">Four hosts, two separate brand families, one application:
-        <code>w12.mycima.movie/watch.php?vid=…</code>,
-        <code>larozza.living/video.php?vid=…</code>,
-        <code>larroza.baby</code>, <code>larroza.homes</code> — same script names,
-        same parameter, same fixed-width hex id. That is not one owner; it is the
-        <b>piracy-as-a-service layer</b> the MPA documents directly
-        (“off-the-shelf streaming operations”: Vidsrc, WHMCS Smarters, HydraHD).
-        Which makes the enforcement target the <em>supplier</em>: one notice to a
-        vendor removes a hundred sites, where one notice to a site removes one.
-        We keep this separate from operator attribution on purpose — a shared
-        vendor must never be allowed to look like a shared owner.</p>
-    </div>
-    <div class="obj">
-      <div class="t">The app store is the fastest path<code>parse_release()</code></div>
-      <p class="d">This corpus names its products after the platforms it pirates:
-        <b>SHAHID PLUS</b>, ALIFLIX, MTNTV, BLADEUHD, VICTV, CRYSTAL OTT,
-        STORM ONE, <span class="ar">ATLAS PR0</span>. Impersonating a registered
-        mark is actionable in a store <b>on its own merits</b> — no proof of any
-        act of infringement, no foreign jurisdiction, no takedown. Besides which,
-        an Android package id is the reversed domain the developer controlled,
-        and it is essentially never rotated, because changing it breaks every
-        install: <code>com.aflamtvmaroc.moviesdarija</code> leaks
-        <code>aflamtvmaroc.com</code>, which may have expired years ago. A version
-        sequence (<code>V4.1 → V4.1a → V10.0 → V11.0.0</code>) ties a rebrand to
-        the same developer across a full domain, package <em>and</em> template
-        rotation — which no infrastructure signal survives.</p>
-    </div>
-
-    <div class="obj">
-      <div class="t">Succession is a public event<code>lineage_edge()</code></div>
-      <p class="d">WeCima marketed itself as <span class="ar">بديل ماي سيما</span> —
-        <i>the alternative to MyCima</i> — and absorbed EgyBest’s audience while
-        EgyBest was down. <b>A platform that counts brands counts increases; one
-        that tracks lineage counts one operator continuing.</b> It is the
-        strongest operator finding available without anybody’s cooperation,
-        because the successor advertises the inheritance.</p>
-    </div>
-  </div>
-</section>
-
-<section id="arithmetic">
-  <div class="wrap">
-    <span class="num">04 · THE MONEY, DONE DEFENSIBLY</span>
-    <h2>Your tariff. Our count. The arithmetic in between.</h2>
-    <p class="sub">We publish no revenue-loss figure, because no counterfactual
-      could support one. What we publish is a quotation — and the only assumption
-      in it is a number <b>you supplied</b>, which is what makes it survive the
-      meeting rather than start one.</p>
-    <div class="calc">
-      <div class="row">
-        <span><span class="lbl">measured, from receipts</span><span class="n">1,800</span> <span class="op">k-views</span></span>
-        <span class="op">×</span>
-        <span><span class="lbl">your published rate</span><span class="n">$3.50</span> <span class="op">/ 1k</span></span>
-        <span class="op">=</span>
-        <span class="op">→</span>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="font:650 .95rem var(--sans);margin-bottom:.7rem">Evidence grades — uncertainty is priced per grade</h3>
+        <div class="scroll-x"><table class="tbl">
+          <thead><tr><th>Grade</th><th>Meaning</th><th class="num">±95%</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">E0</td><td>Hunch. <b>Never leaves the building.</b></td><td class="num dim">—</td></tr>
+            <tr><td class="mono">E1</td><td>Signal (autocomplete, ranking move)</td><td class="num mono">×0.17–5.8</td></tr>
+            <tr><td class="mono">E2</td><td>Observed: page read, hashed, timestamped</td><td class="num mono">×0.50–2.0</td></tr>
+            <tr><td class="mono">E3</td><td>Archived: + immutable copy, external time stamp</td><td class="num mono">×0.68–1.5</td></tr>
+            <tr><td class="mono">E4</td><td>Notarised: + third-party attestation</td><td class="num mono">×0.79–1.3</td></tr>
+          </tbody>
+        </table></div>
+        <p style="font-size:.76rem;color:var(--dim);margin-top:.7rem">Arithmetic takes the <b>weakest link</b>: a product of an E4 and an E1 is an E1. Values are medians, never means — pirate audiences are skewed, and a mean is dragged up by exactly the outliers that flatter a loss figure.</p>
       </div>
-      <div class="out">$6,300
-        <small>412 unauthorised offerings across 40 sources · Iraq · no authorised
-        channel in territory · 27 of 30 instalments present pre-broadcast</small>
+      <div class="card">
+        <h3 style="font:650 .95rem var(--sans);margin-bottom:.7rem">What the instrument refuses</h3>
+        <ul style="list-style:none;display:grid;gap:.45rem">
+          <li style="font-size:.82rem;color:var(--dim);padding-inline-start:1.1rem;position:relative"><span style="position:absolute;inset-inline-start:0;color:var(--gold)">—</span>No revenue-loss figure. No counterfactual could support one.</li>
+          <li style="font-size:.82rem;color:var(--dim);padding-inline-start:1.1rem;position:relative"><span style="position:absolute;inset-inline-start:0;color:var(--gold)">—</span>No accusation on one signal, a shared template, or a shared CDN.</li>
+          <li style="font-size:.82rem;color:var(--dim);padding-inline-start:1.1rem;position:relative"><span style="position:absolute;inset-inline-start:0;color:var(--gold)">—</span>No extrapolation without measured coverage. A missing divisor is never 1.0.</li>
+          <li style="font-size:.82rem;color:var(--dim);padding-inline-start:1.1rem;position:relative"><span style="position:absolute;inset-inline-start:0;color:var(--gold)">—</span>No number without a replayable receipt. No recipe → log line, not evidence.</li>
+          <li style="font-size:.82rem;color:var(--dim);padding-inline-start:1.1rem;position:relative"><span style="position:absolute;inset-inline-start:0;color:var(--gold)">—</span>No pack issued from a tampered receipt; the whole pack is refused.</li>
+          <li style="font-size:.82rem;color:var(--dim);padding-inline-start:1.1rem;position:relative"><span style="position:absolute;inset-inline-start:0;color:var(--gold)">—</span>No media stored. No viewer identified. No learned policy that can't be explained to a regulator.</li>
+        </ul>
+        <p style="font-size:.74rem;color:var(--faint);margin-top:.7rem">34 of the engine's 77 contract checks <b>are</b> these refusals, and the count is measured at runtime, not typed into a summary.</p>
       </div>
     </div>
-    <p class="warn">Markets we cannot price are listed <b>beside</b> the total, not
-      omitted from it — because a sum that silently drops four markets will be
-      quoted as though it covered eight. Where there is no tariff or no measured
-      unit, we report a count and stop.</p>
-
-    <table class="rot" style="margin-top:1.4rem">
-      <thead><tr><th></th><th>“You lost $40M”</th><th>“At your tariff, measured unserved supply is $6,300”</th></tr></thead>
-      <tbody>
-        <tr><td>Contested assumption</td><td>would-have-paid (unknowable)</td><td>none</td></tr>
-        <tr><td>Who can verify</td><td>nobody</td><td>your own finance team, and our receipts</td></tr>
-        <tr><td>What it invites</td><td>an argument about methodology</td><td>a decision</td></tr>
-      </tbody>
-    </table>
-    <p class="warn">Loss framing gets ignored. Opportunity framing gets budget.
-      The constructive finding and the defensible finding turn out to be the same
-      finding — which is why this is commercially viable where audience estimation
-      is a compliance cost.</p>
-  </div>
-</section>
-
-<section id="objects">
-  <div class="wrap">
-    <span class="num">05 · WHAT ACTUALLY RUNS</span>
-    <h2>Four instruments, none of which models a viewer</h2>
-    <div class="obj">
-      <div class="t">Rights calendar<code>model.py</code></div>
-      <p class="d">Severity comes from a copy’s <b>relationship to your licence</b>,
-        never from its size. A live final with 500 simultaneous viewers outranks a
-        three-year-old series with 5 million, because the first is substitution at
-        a rate near one inside a window closing in minutes. <code>PRE_RELEASE_LEAK</code>
-        is the only class with a defendant you already know by name — a screener, a
-        feed, a post-production drive — traceable without anybody’s cooperation.
-        <code>NEVER_AUTHORISED</code> is reported as an unserved market, not as theft.</p>
-    </div>
-    <div class="obj">
-      <div class="t">Receipt<code>receipt.py</code></div>
-      <p class="d">A capture that is <b>born admissible</b> or it is a log line. The
-        facts that make a capture re-verifiable in two years — which resolver
-        answered, which TLS certificate was presented, the exact request bytes —
-        cannot be reconstructed later, so they are recorded at the moment of
-        capture. Two hashes: one pins the bytes, one pins the <b>tag skeleton</b>,
-        which is stable across the one-copyright-year difference between a mirror
-        and its original — so the same number that detects tampering also
-        identifies template clones, free.</p>
-    </div>
-    <div class="obj">
-      <div class="t">Operator graph<code>operator.py</code></div>
-      <p class="d">Titles do not go to court; <b>operators do</b>. Sources are
-        clustered on shared infrastructure, weighted by inverse document frequency,
-        so a Cloudflare IP scores approximately zero automatically — no blocklist
-        for the next provider to evade by being new. Two hard floors sit on top,
-        because a weighted sum can always be coaxed over a line by accumulating
-        near-nothings. A favicon and a template are things you can <b>buy from the
-        same catalogue of dozens</b>, so they corroborate and never decide. Below
-        the floors the word is <code>CO_HOSTED</code>, not <code>OPERATOR</code> —
-        and the distance between those two words is the distance between a lead and
-        a libel.</p>
-    </div>
-    <div class="obj">
-      <div class="t">Evidence ledger<code>ledger.py</code></div>
-      <p class="d">A hash chain proves one thing did not change. It does not prove
-        something was not <b>omitted</b> — and omission is the real attack: prune an
-        inconvenient week and every remaining seal stays valid. So entries commit to
-        their predecessor, days fold into Merkle roots for external anchoring, and
-        <b>an unanchored day says so on the first line of any pack built from
-        it.</b> Implying a protection the system does not have is worse than
-        admitting the gap.</p>
-    </div>
-    <div class="obj">
-      <div class="t">Reappearance latency<code>metrics.py</code></div>
-      <p class="d">The most valuable single number here, and it needs <b>no model of
-        human behaviour at all</b>: a duration between two observed events,
-        reproducible by any third party from the receipts. Removal → re-detection
-        measures the operator, not the page. Absence is <i>observed</i>, never taken
-        from a reply — waiting for a notice to be acknowledged is waiting for an
-        adversary to answer, and 66% of the time they will not, so non-response
-        becomes a dated <code>IGNORED</code> outcome rather than a blank cell. And
-        the mirror hop (removed here, back there, inside the window) is the
-        empirical refutation of per-URL enforcement.</p>
+    <div class="card" style="margin-top:1rem">
+      <h3 style="font:650 .95rem var(--sans);margin-bottom:.55rem">Chain of custody</h3>
+      <p style="font-size:.85rem;color:var(--dim);max-width:75ch">Capture → two hashes (bytes + tag skeleton) + replay recipe (resolver, TLS chain, egress, header order) → sealed receipt → append-only Merkle chain, deletion-detecting → daily root anchored to an external time authority → evidence pack. <b>An unanchored day says so on the first line of any pack built from it</b> — implying a protection the system does not have is worse than admitting the gap. Standard library only, deterministic, re-runnable by people who do not trust us: an estimator nobody can re-run is not evidence, it is a receipt from a vendor.</p>
     </div>
   </div>
 </section>
 
-<section id="proof">
+<!-- ═══════════════ live status ═══════════════ -->
+<section id="status">
   <div class="wrap">
-    <span class="num">06 · VERIFICATION</span>
-    <h2>The instrument declines, and it can be re-run by people who do not trust us</h2>
-    <p class="sub">Standard library only. No PyMC, no ClickHouse, no Neo4j, no
-      Kafka — whatever an enterprise architecture would prefer. Not from thrift,
-      but because <b>an estimator nobody can re-run on their own machine is not
-      evidence, it is a receipt from a vendor.</b> Deterministic, no network at
-      test time, milliseconds on a free runner. Hierarchical Bayesian pooling is
-      replaced by method-of-moments empirical Bayes, re-derivable by hand from one
-      printed formula.</p>
-    <div class="proof">
-      <span><b>178</b> unit tests</span>
-      <span><b>82</b> contract checks</span>
-      <span><b>35</b> of them refusals</span>
-      <span><b>15</b> contract sections</span>
-      <span>exit <b>0</b></span>
-      <span><b>0</b> fabricated zeros</span>
-      <span><b>44</b> cited sources</span>
-      <span><b>17</b> surfaces</span>
+    <div class="shead">
+      <span class="snum">05 · Live status board — the honest map</span>
+      <h2>What exists today, what does not, stated by the platform itself</h2>
+      <p class="ssub">This board is part of the product's discipline: <b>nothing
+        is presented as live that is not</b>. Figures dated 2026-11-04.</p>
     </div>
-    <p class="warn">The refusal count is measured at runtime rather than typed into
-      a summary, because a headline figure that was not observed would break the
-      rule this design exists to enforce — and a report’s own summary line is the
-      easiest place in the system for that kind of error to hide unnoticed.</p>
-
-    <ul class="ref" style="margin-top:1.4rem">
-      <li><span><b>Never</b> a revenue-loss figure — no counterfactual could support it</span></li>
-      <li><span><b>Never</b> an accusation on one signal, a template, or a shared CDN</span></li>
-      <li><span><b>Never</b> a number without a receipt, a date and a hash</span></li>
-      <li><span><b>Never</b> extrapolation without measured coverage — a missing divisor is not 1.0</span></li>
-      <li><span><b>No</b> media stored: metadata, fingerprints and hashes only</span></li>
-      <li><span><b>No</b> learned collection policy — what adapts is where to look, printed as a sentence</span></li>
-      <li><span><b>No</b> individual viewers identified, ever</span></li>
-      <li><span><b>Never</b> a probe count read as a coverage figure — 110 queries on one surface is <b>one detector</b></span></li>
-    </ul>
+    <div class="board">
+      <div class="bi"><div class="h">Engine</div><div class="v ok">187</div><div class="d">unit tests green · 77 contract checks · 34 refusals · exit 0 on Windows and Linux, with and without target intel</div></div>
+      <div class="bi"><div class="h">Repository</div><div class="v ok">public</div><div class="d">github.com/wipe-enforcement/wipenforcement · CI (validate + CodeQL) passing · engine public, target intel private by design</div></div>
+      <div class="bi"><div class="h">Sources</div><div class="v ok">44</div><div class="d">dated, registered with provenance in docs/SOURCES.md · no reported figure derives from them; they establish the shape of the market</div></div>
+      <div class="bi"><div class="h">Surfaces</div><div class="v wait">0 / 17</div><div class="d">declared and classified, <b>none collecting yet</b> — the collector is the next build step, starting with certificate transparency</div></div>
+      <div class="bi"><div class="h">Live data feed</div><div class="v wait">not live</div><div class="d">this page runs the arithmetic on your inputs, in your browser. First live numbers arrive with the collector + CT feed</div></div>
+      <div class="bi"><div class="h">wipenforcement.org</div><div class="v wait">DNS pending</div><div class="d">domain owned; DNS delegation to Pages/Cloudflare is an owner action — this page currently serves from the github.io URL</div></div>
+      <div class="bi"><div class="h">method / radar / verify</div><div class="v wait">designed</div><div class="d">subdomain plan fixed; method content exists (THESIS + SOURCES + METHOD) awaiting render; radar awaits data; verify awaits the vault</div></div>
+      <div class="bi"><div class="h">Ground truth</div><div class="v wait">0 partners</div><div class="d">first-party NDA intake is what promotes legal views from reconstruction (E2) to measurement (E4) — the moat</div></div>
+    </div>
   </div>
 </section>
 
-<footer id="pricing">
+<!-- ═══════════════ rightsholders ═══════════════ -->
+<section id="holders">
   <div class="wrap">
-    <div class="foot">
+    <div class="shead">
+      <span class="snum">06 · For broadcasters, studios and rights holders</span>
+      <h2>Ask for the pre-release set first. It is the only finding with a name attached.</h2>
+    </div>
+    <div class="grid3">
+      <div class="card">
+        <h3 style="font:650 .95rem var(--sans);margin-bottom:.5rem">What you can act on Monday</h3>
+        <p style="font-size:.84rem;color:var(--dim)">A copy circulating before you broadcast it came from a screener, a feed, or a post-production drive. <b>Traceable to a partner you already named</b>, without any cooperation from a pirate, a host, or a foreign authority. Volume-ranked dashboards bury this under archive copies.</p>
+      </div>
+      <div class="card">
+        <h3 style="font:650 .95rem var(--sans);margin-bottom:.5rem">What the quotation is</h3>
+        <p style="font-size:.84rem;color:var(--dim)">Your tariff × our measured count, arithmetic shown, interval propagated, unpriced markets listed beside the total. <b>The only assumption in it is a number you supplied</b> — which is what makes it survive the meeting instead of starting one.</p>
+      </div>
+      <div class="card">
+        <h3 style="font:650 .95rem var(--sans);margin-bottom:.5rem">Why share your ground truth</h3>
+        <p style="font-size:.84rem;color:var(--dim)">First-party availability and viewership data (NDA, calibration only, never published raw) sharpens the rights calendar for <b>every other participant in your territory</b>. The data network effect runs through accuracy, not volume.</p>
+      </div>
+    </div>
+    <div class="card" style="margin-top:1rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center;justify-content:space-between">
       <div>
-        <h4>For broadcasters, studios and rights holders</h4>
-        <p>We can produce, per title and per territory: what is being offered, on
-          how many sources, by how many distinct operations, with what reappearance
-          latency after removal — and which instalments appeared before you
-          broadcast them.</p>
-        <p>The last of those is the one to ask for first. It is the only class of
-          infringement with a defendant you already know by name, and it is
-          measurable today without any cooperation from a pirate, a host or a
-          foreign authority.</p>
-        <p><a href="mailto:enforcement@wipenforcement.org">enforcement@wipenforcement.org</a></p>
+        <h3 style="font:650 .95rem var(--sans)">Request a territory reading</h3>
+        <p style="font-size:.82rem;color:var(--dim);margin-top:.25rem">Per title, per territory: offerings, sources, distinct operations, reappearance latency, pre-release set.</p>
+      </div>
+      <a class="btn pri" href="mailto:enforcement@wipenforcement.org">enforcement@wipenforcement.org</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ roadmap ═══════════════ -->
+<section id="roadmap">
+  <div class="wrap">
+    <div class="shead">
+      <span class="snum">07 · Roadmap</span>
+      <h2>From this page to the live platform</h2>
+    </div>
+    <div class="phase"><div class="when">done <small>2026-11-04</small></div><div><h4 class="done">Measurement engine · research · this site</h4><p>17-module arithmetic with evidence grades, refusals, chain of custody · 44 sourced findings · rotation recogniser + route + APK layer · interactive instrument · repo, CI, Pages.</p></div></div>
+    <div class="phase"><div class="when">days 1–5<small>build next</small></div><div><h4>Collector #1: certificate transparency + drop list</h4><p>Free feeds, no crawling, no robots question. First receipts land in the ledger; first anchored day; first rotation classifications against the private corpus.</p></div></div>
+    <div class="phase"><div class="when">weeks 2–3</div><div><h4>Surfaces 2–5: Telegram view-counters, search probes, site watch, new-domain feed</h4><p>First coverage figure the platform has ever measured on itself — with its blind pairs printed.</p></div></div>
+    <div class="phase"><div class="when">week 4</div><div><h4>radar. + method. rendered · DNS live</h4><p>Live counters on radar; formulas, sources and error log on method; wipenforcement.org pointed at the deployment. First quarterly entry for the index.</p></div></div>
+    <div class="phase"><div class="when">weeks 5–8</div><div><h4>verify. vault + first rightsholder pilot</h4><p>Evidence packs behind Access, confirm/dispute loop, NDA ground-truth intake. IPTV manifests, torrent swarms, app stores, Discord join the fleet.</p></div></div>
+    <div class="phase"><div class="when">quarter 2</div><div><h4>Enforcement loop + regulator briefings</h4><p>Notice → outcome → reappearance clock; supplier-level escalation; the 30-minute standard measured, not quoted.</p></div></div>
+  </div>
+</section>
+</main>
+
+<!-- ═══════════════ footer ═══════════════ -->
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <h4>WIPE Enforcement</h4>
+        <p>Measured evidence of unauthorised distribution of Arabic and MENA
+          audiovisual content. Findings are <b>evidence of availability, not
+          legal determinations</b>. Collection is passive and public;
+          robots.txt respected on every monitored surface.</p>
+        <p style="margin-top:.6rem"><a href="mailto:enforcement@wipenforcement.org">enforcement@wipenforcement.org</a></p>
+      </div>
+      <div>
+        <h4>Architecture</h4>
+        <ul>
+          <li><a href="https://github.com/wipe-enforcement/wipenforcement">Engine &amp; method (public repo)</a></li>
+          <li><a href="https://github.com/wipe-enforcement/wipenforcement/blob/main/docs/THESIS.md">docs/THESIS.md — the reasoning</a></li>
+          <li><a href="https://github.com/wipe-enforcement/wipenforcement/blob/main/docs/SOURCES.md">docs/SOURCES.md — 44 cited facts</a></li>
+          <li>www · method · radar · index · verify</li>
+        </ul>
       </div>
       <div>
         <h4>What we will not do</h4>
@@ -566,24 +714,390 @@ footer{padding:2.6rem 0 3.2rem}
           <li>Quote a loss figure we cannot defend line by line</li>
           <li>Name an operator on corroborating evidence alone</li>
           <li>Publish a coverage claim we did not measure</li>
-          <li>Store a copy of anything</li>
+          <li>Store a copy of anything, or identify a viewer</li>
         </ul>
-        <p style="margin-top:.8rem">Method, formulas, sources and limitations are
-          published in advance at <code>method.wipenforcement.org</code>, including
-          the ones that embarrass us. Evidence packs at
-          <code>verify.wipenforcement.org</code>.</p>
       </div>
     </div>
-    <p class="fine">WIPE Enforcement · wipenforcement.org · Findings are evidence of
-      availability, not legal determinations. Collection is passive and public;
-      robots.txt is respected on every monitored surface. Third-party audience
-      figures cited on this page are scale context from rights-holder filings and
-      are contested in substance; nothing we report derives from them. Saudi PDPL
-      and the UAE framework differ materially on privacy and evidence admissibility —
-      a written local opinion is a precondition of operating in those markets, not a
-      parallel task.</p>
+    <p class="fine">© 2026 WIPE Enforcement · wipenforcement.org · Saudi PDPL and the UAE framework differ materially on privacy and evidence admissibility; written local opinions are a precondition of operating in those markets, not a parallel task. · Third-party audience figures cited anywhere on this site are scale context from public enforcement filings and are contested in substance; no figure this platform reports derives from them. · This page ships no external requests: no fonts, no analytics, no CDN. Verify: view source, or run the engine — python tools/qarin_selfcheck.py</p>
   </div>
 </footer>
 
+<script>
+"use strict";
+/* ═════════════════════════════════════════════════════════════
+   The instrument, ported. Same semantics as qarin/: null-contagious
+   estimates, lognormal intervals, bounded shares, per-surface
+   coverage accounting. No dependencies, no network.
+   ═════════════════════════════════════════════════════════════ */
+(function(){
+
+/* ---------- theme ---------- */
+var root=document.documentElement,
+    sun=document.getElementById("ico-sun"),
+    moon=document.getElementById("ico-moon");
+function setTheme(t){root.setAttribute("data-theme",t);
+  sun.style.display=t==="light"?"block":"none";
+  moon.style.display=t==="light"?"none":"block";
+  try{localStorage.setItem("wipe-theme",t)}catch(e){}}
+var saved=null;try{saved=localStorage.getItem("wipe-theme")}catch(e){}
+setTheme(saved||(window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"));
+document.getElementById("theme").addEventListener("click",function(){
+  setTheme(root.getAttribute("data-theme")==="dark"?"light":"dark")});
+
+/* ---------- scrollspy ---------- */
+var navLinks=[].slice.call(document.querySelectorAll("nav a")),
+    secs=navLinks.map(function(a){return document.querySelector(a.getAttribute("href"))});
+function spy(){
+  var y=scrollY+90,cur=0;
+  secs.forEach(function(s,i){if(s&&s.offsetTop<=y)cur=i});
+  navLinks.forEach(function(a,i){a.classList.toggle("on",i===cur)});
+}
+addEventListener("scroll",spy,{passive:true});spy();
+
+/* ---------- tabs ---------- */
+document.querySelectorAll(".tab").forEach(function(t){
+  t.addEventListener("click",function(){
+    document.querySelectorAll(".tab").forEach(function(x){
+      x.classList.toggle("on",x===t);x.setAttribute("aria-selected",x===t?"true":"false")});
+    document.querySelectorAll(".panel").forEach(function(p){
+      p.classList.toggle("on",p.id===t.dataset.p)});
+  });
+});
+
+/* ---------- Estimate algebra (port of qarin/units.py) ---------- */
+var Z95=1.959963985;
+function E(v,unit,o){o=o||{};
+  return {v:v,unit:unit,s:o.s===undefined?null:o.s,grade:o.grade||"E2",
+          method:o.method||"MEASURED",why:o.why||null,parts:o.parts||[]};}
+function unk(unit,why){return {v:null,unit:unit,why:why,grade:"E0",method:"MEASURED",parts:[]};}
+function isUnk(e){return e===null||e===undefined||e.v===null||e.v===undefined;}
+function mul2(a,b,unit,note){
+  if(isUnk(a))return unk(unit,a.why||"input unknown");
+  if(isUnk(b))return unk(unit,b.why||"input unknown");
+  var s=(a.s!==null&&b.s!==null)?Math.hypot(a.s,b.s):null;
+  return {v:a.v*b.v,unit:unit,s:s,grade:a.grade<b.grade?a.grade:b.grade,
+          method:"MODELLED",note:note||"product",parts:(a.parts||[]).concat(b.parts||[])};}
+function div2(a,b,unit,note){
+  if(isUnk(a))return unk(unit,a.why||"input unknown");
+  if(isUnk(b))return unk(unit,b.why||"input unknown");
+  if(b.v===0)return unk(unit,"division by a measured zero");
+  var s=(a.s!==null&&b.s!==null)?Math.hypot(a.s,b.s):null;
+  return {v:a.v/b.v,unit:unit,s:s,grade:a.grade<b.grade?a.grade:b.grade,
+          method:"MODELLED",note:note||"quotient",parts:(a.parts||[]).concat(b.parts||[])};}
+function add2(a,b,unit){
+  if(isUnk(a))return unk(unit,a.why||"summand unknown");
+  if(isUnk(b))return unk(unit,b.why||"summand unknown");
+  /* Fenton-Wolfe moment match, same as the Python engine */
+  function mom(med,sg){var mu=med*Math.exp(.5*sg*sg);return [mu,(Math.exp(sg*sg)-1)*mu*mu];}
+  var s=null;
+  if(a.s!==null&&b.s!==null){
+    if(a.v===0||b.v===0){s=a.v===0?b.s:a.s;}
+    else{var m1=mom(a.v,a.s),m2=mom(b.v,b.s),mu=m1[0]+m2[0],
+         cv2=(m1[1]+m2[1])/(mu*mu);
+         s=Math.sqrt(Math.log(1+cv2));}
+  }
+  return {v:a.v+b.v,unit:unit,s:s,grade:a.grade<b.grade?a.grade:b.grade,
+          method:"MODELLED",note:"sum (Fenton-Wolfe)",parts:[]};}
+function bounded(r){ /* clamp_ratio: a share never prints above 100% */
+  if(isUnk(r))return r;
+  if(r.v>1)return unk(r.unit,"numerator exceeded denominator ("+r.v.toFixed(3)+")");
+  var s=r.s;
+  if(s&&r.v>0){
+    if(r.v>=1)s=0;
+    else if(r.v*Math.exp(Z95*s)>1)s=Math.log(1/r.v)/Z95;
+  }
+  return {v:r.v,unit:r.unit,s:s,grade:r.grade,method:r.method,note:"bounded share",parts:r.parts};}
+function q(e,p){return isUnk(e)||e.s===null?null:e.v*Math.exp(normInv(p)*e.s);}
+var _pc=[-1e9,0];
+function normInv(p){ /* Acklam-lite: good to ~1e-9, plenty for display */
+  if(p<=0||p>=1)return NaN;
+  var a=[-3.969683028665376e+01,2.209460984245205e+02,-2.759285104469687e+02,1.383577518672690e+02,-3.066479806614716e+01,2.506628277459239e+00],
+      b=[-5.447609879822406e+01,1.615858368580409e+02,-1.556989798598866e+02,6.680131188771972e+01,-1.328068155288572e+01],
+      c=[-7.784894002430293e-03,-3.223964580411365e-01,-2.400758277161838e+00,-2.549732539343734e+00,4.374664141464968e+00,2.938163982698783e+00],
+      d=[7.784695709041462e-03,3.224671290700398e-01,2.445134137142996e+00,3.754408661907416e+00],
+      pl=0.02425,lo=0,hi=1,x,qv,r;
+  if(p<pl){qv=Math.sqrt(-2*Math.log(p));
+    return (((((c[0]*qv+c[1])*qv+c[2])*qv+c[3])*qv+c[4])*qv+c[5])/((((d[0]*qv+d[1])*qv+d[2])*qv+d[3])*qv+1);}
+  if(p>1-pl){qv=Math.sqrt(-2*Math.log(1-p));
+    return -(((((c[0]*qv+c[1])*qv+c[2])*qv+c[3])*qv+c[4])*qv+c[5])/((((d[0]*qv+d[1])*qv+d[2])*qv+d[3])*qv+1);}
+  qv=p-0.5;r=qv*qv;
+  return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*qv/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);}
+function fmt(n,dp){if(n===null||n===undefined||isNaN(n))return "—";
+  return n.toLocaleString("en-US",{maximumFractionDigits:dp===undefined?0:dp,minimumFractionDigits:0});}
+function money(n){return isFinite(n)?"$"+fmt(n,n<100?2:0):"—";}
+function pct(x,dp){return x===null||x===undefined?"—":(100*x).toFixed(dp===undefined?1:dp)+"%";}
+function iv(e){ /* "[lo–hi]" from sigma, or "" */
+  if(isUnk(e)||e.s===null||e.s===undefined)return "";
+  var lo=q(e,.025),hi=q(e,.975);
+  if(e.unit==="share"){hi=Math.min(hi,1);}
+  return " ["+(e.unit==="share"?pct(lo)+"–"+pct(hi):fmt(lo)+"–"+fmt(hi))+"]";}
+function stampHTML(e){
+  if(isUnk(e))return '<span class="stamp u">— unknown · '+esc(e.why||"")+'</span>';
+  return '<span class="stamp m">'+e.method+' · '+e.grade+iv(e)+'</span>';}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){
+  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+
+/* ---------- Q: quote calculator ---------- */
+var qViews=document.getElementById("q-views"),qCov=document.getElementById("q-cov"),
+    qCovU=document.getElementById("q-covunk"),qTar=document.getElementById("q-tar"),
+    qDisp=document.getElementById("q-disp"),qOut=document.getElementById("q-out");
+function quote(){
+  var vw=Math.round(Math.pow(10,+qViews.value)),
+      covU=qCovU.checked,cov=+qCov.value/100,tar=+qTar.value,disp=+qDisp.value/100;
+  document.getElementById("q-vv").textContent=fmt(vw);
+  document.getElementById("q-cw").textContent=covU?"unknown":Math.round(cov*100)+"%";
+  document.getElementById("q-tw").textContent="$"+tar.toFixed(2);
+  document.getElementById("q-dw").textContent=Math.round(disp*100)+"%";
+
+  var obs=E(vw,"views",{s:0.35,grade:"E2",method:"MEASURED"});
+  var covE=covU?unk("fraction","no coverage measurement for this fleet yet")
+               :E(cov,"fraction",{s:0.15,grade:"E2",method:"MODELLED"});
+  var total=mul2(obs,div2(E(1,"x",{s:0}),covE,"x",""), "views");
+  total=isUnk(covE)?unk("views",covE.why):E(vw/cov,"views",
+        {s:Math.hypot(obs.s,covE.s),grade:"E2",method:"MODELLED"});
+  var dispE=E(disp,"fraction",{s:0.25,grade:"E1",method:"MODELLED"}),
+      tarE=E(tar/1000,"USD/view",{s:0.20,grade:"E1",method:"MEASURED"});
+  var q1=mul2(total,dispE,"views"),quote=isUnk(q1)?q1:mul2(q1,tarE,"USD");
+  var kUnits=total.v!==undefined&&total.v!==null?total.v/1000:null;
+
+  var h='<span class="lbl">Quotation</span>';
+  if(isUnk(quote)){
+    h+='<div class="big refuse">— '+esc(quote.why||"cannot quote")+'</div>'+
+       '<p class="expl">No value is asserted without a measured unit and a published tariff. '+
+       'The <b>count</b> is still the finding: '+fmt(vw)+' measured views'+
+       (covU?'':' across a fleet with '+pct(cov)+' measured coverage')+'.</p>'+
+       stampHTML(quote);
+  }else{
+    h+='<div class="big">'+money(quote.v)+'<span class="dim" style="font-size:.55em"> '+iv(quote)+'</span></div>'+
+       '<div class="rows">'+
+       '<div class="row"><span class="k">measured audience (seen)</span><span class="v">'+fmt(vw)+' views</span></div>'+
+       '<div class="row"><span class="k">÷ measured coverage → total supply reached</span><span class="v">'+fmt(total.v)+' views</span></div>'+
+       '<div class="row"><span class="k">× displacement '+pct(disp,0)+' (never 1:1)</span><span class="v">'+fmt(q1.v)+' view-equivalents</span></div>'+
+       '<div class="row"><span class="k">× your tariff $'+tar.toFixed(2)+'/1k</span><span class="v">'+money(quote.v)+'</span></div>'+
+       '</div>'+stampHTML(quote)+
+       '<p class="expl"><code>'+fmt(total.v)+' × '+disp.toFixed(2)+' × '+(tar/1000).toFixed(5)+' = '+money(quote.v)+
+       '</code> — their rate, our count, arithmetic shown, <b>no loss assumption</b>. P10–P90: '+
+       money(q(quote,.1))+' – '+money(q(quote,.9))+'.</p>';
+  }
+  qOut.innerHTML=h;
+}
+[qViews,qCov,qTar,qDisp].forEach(function(el){el.addEventListener("input",quote)});
+qCovU.addEventListener("change",function(){qCov.disabled=qCovU.checked;quote()});
+quote();
+
+/* ---------- F: fleet planner ---------- */
+var fP=document.getElementById("f-p"),fK=document.getElementById("f-k"),
+    fT=document.getElementById("f-t"),fC=document.getElementById("f-c"),
+    fOut=document.getElementById("f-out");
+function fleet(){
+  var p=+fP.value/100,k=+fK.value,t=+fT.value/100,rho=+fC.value/100;
+  document.getElementById("f-pw").textContent=Math.round(p*100)+"%";
+  document.getElementById("f-kw").textContent=k;
+  document.getElementById("f-tw").textContent=Math.round(t*100)+"%";
+  document.getElementById("f-cw").textContent=rho===0?"independent":
+    "ρ="+Math.round(rho*100)+"% (effective reach ≈ "+Math.round(p*(1-rho)*100)+"%)";
+  var pe=p*(1-rho), /* correlation tax: overlap collapses effective independence */
+      cov=1-Math.pow(1-pe,k),
+      need=(pe>0&&t<1)?Math.ceil(Math.log(1-t)/Math.log(1-pe)-1e-12):null,
+      attainable=(need!==null&&k>=need);
+  var w=Math.min(100,cov*100);
+  var h='<span class="lbl">Achievable coverage</span>'+
+    '<div class="big">'+pct(cov)+'</div>'+
+    '<div class="bar-track"><div class="bar-fill" style="width:'+w+'%"></div>'+
+    '<div class="bar-hi" style="left:'+Math.min(100,t*100)+'%"></div></div>'+
+    '<div class="rows">'+
+    '<div class="row"><span class="k">target (white line)</span><span class="v">'+pct(t,0)+'</span></div>'+
+    '<div class="row"><span class="k">independent detectors required</span><span class="v">'+(need===null?"—":need)+'</span></div>'+
+    '<div class="row"><span class="k">fleet you have</span><span class="v">'+k+(rho>0?" (ρ="+Math.round(rho*100)+"%)":"")+'</span></div>'+
+    '<div class="row"><span class="k">verdict</span><span class="v '+(attainable?"mint":"red")+'">'+
+      (attainable?"target reachable":"target IMPOSSIBLE at this reach")+'</span></div>'+
+    '</div>'+
+    '<p class="expl">'+(attainable?
+      'Coverage is arithmetic here. Build the fleet to '+need+' <b>mutually independent</b> detectors and the target is met on paper — then measure the real figure with capture–recapture, which is always ≤ this.'
+      :'No amount of engineering closes this: at '+pct(p,0)+' effective reach you need <b>'+need+
+      ' orthogonal detectors</b>, and you have '+k+'. The lever is <b>independence</b> — an IPTV harvester or a torrent listener outranks a '+
+      (k+1)+'th website scraper.')+'</p>';
+  fOut.innerHTML=h;
+}
+[fP,fK,fT,fC].forEach(function(el){el.addEventListener("input",fleet)});
+fleet();
+
+/* ---------- R: rotation classifier (port of qarin/rotation.py) ---------- */
+var EXAMPLE_BRANDS={alpha:["alpha"],betav:["betav"],gammas:["gammas"]};
+var COMBO=["official","vip","pro","plus","premium","new","live","stream","app","tv","hd"];
+var RULES=[["a","aa"],["e","ee"],["i","ii"],["o","oo"],["u","uu"],["s","ss"],["z","zz"]];
+var HOMO={"0":"o","1":"l","3":"e","5":"s","7":"t","@":"a","$":"s"};
+function foldH(s){return s.toLowerCase().split("").map(function(c){return HOMO[c]||c}).join("");}
+function lev(a,b,cap){cap=cap||2;
+  if(a===b)return 0;if(Math.abs(a.length-b.length)>cap)return cap+1;
+  var prev=[],i,j,cur;for(j=0;j<=b.length;j++)prev[j]=j;
+  for(i=1;i<=a.length;i++){cur=[i];var mn=i;
+    for(j=1;j<=b.length;j++){cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]!==b[j-1]?1:0));
+      if(cur[j]<mn)mn=cur[j];}
+    if(mn>cap)return cap+1;prev=cur;}
+  return prev[b.length];}
+function ruleName(obs,want){
+  if(obs===want)return "exact";
+  for(var r=0;r<RULES.length;r++){var a=RULES[r][0],b=RULES[r][1];
+    if(obs.indexOf(b)>=0){var col=obs,n=0;
+      while(col.indexOf(b)>=0&&n<4){col=col.split(b).join(a);n++;}
+      if(col===want)return a+"->"+b;}}
+  for(var i=0;i<want.length;i++){
+    if(want.slice(0,i)+want.slice(i+1)===obs)return "omit:"+want[i]+"@"+i;
+    if(i+1<want.length&&want.slice(0,i)+want[i+1]+want[i]+want.slice(i+2)===obs)return "transpose@"+i;}
+  for(var c=0;c<COMBO.length;c++){
+    if(obs===want+"-"+COMBO[c])return "combosquat:-"+COMBO[c];
+    if(obs===COMBO[c]+want)return "combosquat:"+COMBO[c]+"-";}
+  return "unexplained-edit";}
+function classify(raw){
+  var host=String(raw||"").trim().toLowerCase().replace(/\.$/,""),
+      parts=host.split("."),i,bid;
+  if(parts.length<2||!host)return null;
+  var zones=parts.length>=3?[parts[0],parts[1]]:[parts[0]];
+  var best=null;
+  for(var z=0;z<zones.length;z++){
+    var folded=foldH(zones[z]),combo=null,bare=folded;
+    for(var c=0;c<COMBO.length;c++){var w=COMBO[c];
+      if(bare.length>w.length+2&&bare.endsWith("-"+w)){combo=w;bare=bare.slice(0,-(w.length+1));break;}
+      if(bare.length>w.length+2&&bare.indexOf(w)===0&&bare[w.length]==="-"){combo=w;bare=bare.slice(w.length+1);break;}
+      if(bare.length>w.length+2&&bare.indexOf(w)===0&&!/[a-z]/.test(bare[w.length])){combo=w;bare=bare.slice(w.length);break;}
+      if(bare.length>w.length+2&&bare.endsWith(w)&&!/[a-z]/.test(bare[bare.length-w.length-1])){combo=w;bare=bare.slice(0,-w.length);break;}}
+    var cands={};cands[folded]=1;cands[bare]=1;cands[folded.split("-").join("")]=1;cands[bare.split("-").join("")]=1;
+    for(var cd in cands){var cand=cands[cd]?cd:continue;
+      for(bid in EXAMPLE_BRANDS){
+        var wants=EXAMPLE_BRANDS[bid];
+        for(var wi=0;wi<wants.length;wi++){var want=wants[wi],e=lev(cand,want);
+          var band=e+(combo?1:0);
+          if(band>2)continue;
+          var verdict=band===0?"EXACT":band===1?"ROTATION_STOCK":"LOOKALIKE";
+          var hit={host:host,brand:bid,verdict:verdict,edits:e,
+                   rule:ruleName(cand,want),combo:combo,
+                   sub:z===0&&parts.length>=3?parts[0]:null};
+          if(!best||band<(best.edits+(best.combo?1:0)))best=hit;
+          if(band===0&&!best.rule.match(/exact/))best=hit;
+        }}}
+  }
+  return best;}
+var rIn=document.getElementById("r-in"),rOut=document.getElementById("r-out");
+function showRot(){
+  var raw=rIn.value,h='<span class="lbl">Classification</span>',c=classify(raw);
+  if(!c){h+='<div class="big refuse">— the grammar does not speak to this name</div>'+
+    '<p class="expl">Not a verdict of "unrelated": an unmatched name says nothing about the brand and is never counted as a finding. '+
+    '<b>None is not zero.</b></p><span class="stamp u">NO HIT</span>';
+    rOut.innerHTML=h;return;}
+  var cls=c.verdict==="EXACT"?"exact":c.verdict==="ROTATION_STOCK"?"stock":c.verdict==="LOOKALIKE"?"look":"none";
+  h+='<div class="big" style="font-size:1.15rem;word-break:break-all">'+esc(c.host)+'</div>'+
+     '<p style="margin:.4rem 0"><span class="pill '+cls+'">'+c.verdict+'</span></p>'+
+     '<div class="rows">'+
+     '<div class="row"><span class="k">brand</span><span class="v">'+esc(c.brand)+' <span class="faint">(example corpus)</span></span></div>'+
+     '<div class="row"><span class="k">rule</span><span class="v">'+esc(c.rule)+'</span></div>'+
+     '<div class="row"><span class="k">edits</span><span class="v">'+c.edits+'</span></div>'+
+     (c.combo?'<div class="row"><span class="k">combosquat word</span><span class="v">'+esc(c.combo)+'</span></div>':"")+
+     (c.sub?'<div class="row"><span class="k">subdomain</span><span class="v">'+esc(c.sub)+' — no WHOIS event exists for this; only CT sees it</span></div>':"")+
+     '<div class="row"><span class="k">escalate?</span><span class="v '+(c.verdict==="LOOKALIKE"?"faint":"mint")+'">'+
+       (c.verdict==="LOOKALIKE"?"recorded, not escalated":"yes — actionable")+'</span></div>'+
+     '</div>'+
+     '<p class="expl">The <b>rule</b> is the product, not the verdict: "this is '+esc(c.brand)+
+     ' with '+esc(c.rule)+'" is falsifiable per name and accumulates into how one operation buys longevity.</p>';
+  rOut.innerHTML=h;}
+rIn.addEventListener("input",showRot);
+document.querySelectorAll('[data-host]').forEach(function(b){
+  b.addEventListener("click",function(){rIn.value=b.dataset.host;showRot();});});
+showRot();
+
+/* ---------- C: rights calendar ---------- */
+var cKind=document.getElementById("c-kind"),cTerr=document.getElementById("c-terr"),
+    cOut=document.getElementById("c-out");
+var CAL={
+ "series|eg-lic":{av:"CONCURRENT_UNAUTHORISED",sev:3,sla:240,
+   why:"legally on Shahid at the same time — substitution is real but partial",
+   act:"standard DMCA / regional notice; supplier-route escalation if the host runs a shared player"},
+ "series|eg-pre":{av:"PRE_RELEASE_LEAK",sev:1,sla:15,
+   why:"observed before first broadcast — screener, feed, or post-production",
+   act:"<b>attribution workflow</b>: watermark forensics on the earliest copy; the defendant is a partner you already named"},
+ "series|eg-post":{av:"POST_WINDOW",sev:4,sla:1440,
+   why:"your licence window closed — some substitution against the next release, much weaker",
+   act:"batch notice; do not spend legal budget here while leaks queue behind it"},
+ "series|iq-none":{av:"NEVER_AUTHORISED",sev:5,sla:null,
+   why:"no right of any kind registered there — <b>this is not theft, it is an unserved market</b>",
+   act:"commercial finding: measured demand at known supply volume with no licence to contradict it. Take it to programming, not litigation"},
+ "series|xx-unk":{av:"UNKNOWN",sev:6,sla:null,
+   why:"the calendar holds no record for this territory — the instrument declines to classify",
+   act:"resolve the calendar record first. An unknown classification is never defaulted into a severity ranking"},
+ "live|eg-lic":{av:"SIMULTANEOUS_LIVE",sev:2,sla:5,
+   why:"inside the live rights window of the event — substitution rate approaches 1, and damage is minutes-up",
+   act:"30-minute standard: tokenised-HLS route, supplier-level notice, regulator-grade receipt <b>before</b> half-time"},
+ "live|eg-pre":{av:"PRE_RELEASE_LEAK",sev:1,sla:15,why:"a stream key or feed is circulating before the event",
+   act:"attribution workflow; rotate distribution credentials immediately"},
+ "live|eg-post":{av:"POST_WINDOW",sev:4,sla:1440,why:"the event is over; this is now an archive copy",
+   act:"batch notice"},
+ "live|iq-none":{av:"NEVER_AUTHORISED",sev:5,sla:null,why:"no live rights sold in territory — an unserved market for the format",
+   act:"commercial finding"},
+ "live|xx-unk":{av:"UNKNOWN",sev:6,sla:null,why:"no calendar record — declines",act:"resolve the calendar first"},
+ "film|eg-lic":{av:"CONCURRENT_UNAUTHORISED",sev:3,sla:240,
+   why:"in your theatrical/streaming window — TS/CAM tags name a physical cinema as the source",
+   act:"provenance matters more than volume here: the quality tag tells you which exhibition partner"},
+ "film|eg-pre":{av:"PRE_RELEASE_LEAK",sev:1,sla:15,why:"before release — screener watermark applies",
+   act:"attribution workflow"},
+ "film|eg-post":{av:"POST_WINDOW",sev:4,sla:1440,why:"window closed",act:"batch notice"},
+ "film|iq-none":{av:"NEVER_AUTHORISED",sev:5,sla:null,why:"never licensed there — unserved market",
+   act:"commercial finding"},
+ "film|xx-unk":{av:"UNKNOWN",sev:6,sla:null,why:"no calendar record — declines",act:"resolve first"}
+};
+var AVCLS={PRE_RELEASE_LEAK:"stock",SIMULTANEOUS_LIVE:"stock",CONCURRENT_UNAUTHORISED:"look",
+  POST_WINDOW:"look",NEVER_AUTHORISED:"exact",UNKNOWN:"none"};
+function cal(){
+  var key=cKind.value+"|"+cTerr.value,c=CAL[key]||CAL["series|xx-unk"],
+      h='<span class="lbl">Classification</span>'+
+  '<div class="big" style="font-size:1.05rem;letter-spacing:0">'+c.av+'</div>'+
+  '<p style="margin:.35rem 0"><span class="pill '+AVCLS[c.av]+'">severity rank '+c.sev+' of 6</span></p>'+
+  '<div class="rows">'+
+  '<div class="row"><span class="k">why</span><span class="v" style="font-family:var(--sans);font-weight:400;max-width:34ch;text-align:end">'+c.why+'</span></div>'+
+  '<div class="row"><span class="k">response SLA</span><span class="v">'+(c.sla===null?"— no clock":c.sla+" min")+'</span></div>'+
+  '<div class="row"><span class="k">action</span><span class="v" style="font-family:var(--sans);font-weight:400;max-width:34ch;text-align:end">'+c.act+'</span></div>'+
+  '</div>';
+  if(c.av==="UNKNOWN")h+='<span class="stamp u">DECLINED — never defaulted</span>';
+  else if(c.sev<=2)h+='<span class="stamp m">ACTIONABLE tonight</span>';
+  cOut.innerHTML=h;}
+cKind.addEventListener("change",cal);cTerr.addEventListener("change",cal);
+cal();
+
+/* ---------- surfaces grid ---------- */
+var SURFACES=[
+ ["search_index","live-ish","Query probes generated from the supply side's own advertising grammar. ONE detector however many wordings — counted as such.","wired in engine; collector pending"],
+ ["site_crawl","plan","Enumerated domains themselves: listings, routes, metadata. robots.txt respected.","collector"],
+ ["seo_farm","plan","The parasite layer: free-hosted keyword-stuffed pages that capture and redirect search demand.","collector"],
+ ["telegram","plan","Public channel posts <b>with their view counters</b> — audience, not effort. Hashtag-searchable preview, no API.","collector"],
+ ["iptv_manifest","plan","m3u playlists and panel markers; plaintext streams circulate on paste hosts.","collector"],
+ ["torrent_swarm","plan","DHT info_hashes — entity keys that survive every domain rotation.","collector"],
+ ["app_store","plan","Package ids outlive every domain, brand and template. Store-policy removals need no jurisdiction.","collector"],
+ ["ugc","plan","Re-uploads and clips on the major platforms; the clip is the leak vector and the receipt.","collector"],
+ ["new_domain_feed","plan","WHOIS/RMRD registrations matching the rotation grammar — the acquisition moment.","collector"],
+ ["certificate_transparency","plan","Sees names <b>before the site serves anything</b>, and is the only surface that sees subdomain rotation.","FIRST COLLECTOR"],
+ ["whois_drop","plan","Brand-adjacent names reaching redemption: about to change hands.","collector"],
+ ["discord","plan","Public server directories list regional movie hubs by drop cadence and subtitle language.","collector"],
+ ["apk_package","plan","Android package ids as operator keys; version continuity links rebrands across full rotation.","collector"],
+ ["url_shortener","plan","This corpus distributes via shorteners, not store links — one account ties many releases together.","collector"],
+ ["telegram_hashtag","plan","Public preview is hashtag-searchable with no API at all.","collector"],
+ ["paste_site","plan","Drop zones where playlists and keys appear before they are advertised anywhere.","collector"],
+ ["messaging","plan","Declared honestly: closed groups are out of reach of every passive method. A flow problem, not a measurement one — recorded as partial coverage, never as invisibility.","out of reach by design"]
+];
+var sg=document.getElementById("surfgrid");
+SURFACES.forEach(function(s,i){
+  var d=document.createElement("div");d.className="sc";d.tabIndex=0;
+  d.setAttribute("role","button");
+  d.innerHTML='<div class="nm"><span class="st '+(s[1]==="plan"?"plan":"live")+'"></span>'+s[0]+'</div>'+
+    '<div class="d">'+s[3]+'</div><div class="why">'+s[2]+'</div>';
+  function toggle(){
+    var was=d.classList.contains("on");
+    document.querySelectorAll(".sc.on").forEach(function(x){x.classList.remove("on")});
+    if(!was)d.classList.add("on");}
+  d.addEventListener("click",toggle);
+  d.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle();}});
+  sg.appendChild(d);
+});
+
+})();
+</script>
 </body>
 </html>
