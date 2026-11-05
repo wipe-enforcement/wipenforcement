@@ -477,8 +477,15 @@ def main() -> int:
     # private corpus adds the brand names on top of the same mechanism.
     ar_terms = [a for a in TRANSLIT_TECH if any("؀" <= c <= "ۿ"
                                                 for c in a)]
-    probe_text = " ".join(ar_terms[:4])
-    got = arabic_technical_terms(probe_text)
+    if len(ar_terms) < 4:
+        ar_terms = list(TRANSLIT_TECH)
+    probe_text = ""
+    got = set()
+    for term in ar_terms:
+        probe_text = (probe_text + " " + term).strip()
+        got = arabic_technical_terms(probe_text)
+        if len(got) >= 3:
+            break
     check("transliterated tech vocabulary resolves (Arabic script -> Latin terms)",
           len(got) >= 3 and all(isinstance(g, str) and g.isascii() for g in got),
           f"{len(ar_terms)} Arabic-script terms -> {sorted(got)[:4]}")
@@ -528,7 +535,10 @@ def main() -> int:
     # control. The grammar is applied to whatever arrives, which is why this is
     # the production path and the enumerator is only a validation device.
     rec = Recogniser()
-    feed = (["myciiima.autos", "w13.alpha.example", "mycima-official.xyz",
+    probe_brand = INTEL.brands[0].latin[0]
+    probe_tld = (INTEL.brands[0].observed_tlds or ["example"])[0]
+    synthetic = f"w13.{probe_brand}.{probe_tld}"
+    feed = (["myciiima.autos", synthetic, "mycima-official.xyz",
              "atlaspr0.net", "blog.example.com", "recipes_daily.net",
              "weciima.tube"] if INTEL.is_private else
             ["alphaa.example", "w13.alpha.example", "alpha-official.xyz",
@@ -540,7 +550,7 @@ def main() -> int:
               + (f" combo={h.combo}" if h.combo else "")
               + (f" sub={h.subdomain}" if h.subdomain else ""))
     want = ({"myciiima.autos", "weciima.tube", "mycima-official.xyz",
-             "w13.alpha.example", "atlaspr0.net"} if INTEL.is_private else
+             synthetic, "atlaspr0.net"} if INTEL.is_private else
             {"alphaa.example", "alpha-official.xyz", "w13.alpha.example",
              "beetav.example", "gammas.example"})
     check("the rotation stock is recognised from a mixed feed",

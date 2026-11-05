@@ -74,6 +74,17 @@ from .metrics import (
     reappearance_latency,
     supply_coverage,
 )
+from .collector import Collection, FeedRow, collect, parse_feed
+from .radar import RadarCell, RadarSnapshot, build_cell, snapshot
+from .connectors import FeedError, fetch_ct_rows, fetch_rss_rows
+from .audience import AudienceRecord
+from .health import HealthBoard, SourceStatus
+from .publish import PublishRefused, publish_json
+from .scope import ARABIC_BASELINE, OPTIONAL_COMPETITOR, Market, scope
+from .market_metrics import MarketCoverage, coverage_matrix, market_coverage, registered_market_coverage
+from .onboarding import OnboardingReport, validate_manifest
+from .detectors import Detector, DetectorRegistry, declared_fleet
+from .readiness import ReadinessReport, assess
 
 __all__ = [
     "Work", "WorkKind", "Right", "Territory", "AuthorisedChannel", "Availability",
@@ -88,4 +99,15 @@ __all__ = [
     "parse_release", "package_to_domains", "continues_sequence",
     "Appearance", "Coverage", "DetectorSpan", "supply_coverage",
     "reappearance_latency", "catalog_completeness", "availability_gap",
+    "FeedRow", "Collection", "parse_feed", "collect",
+    "RadarCell", "RadarSnapshot", "build_cell", "snapshot",
+    "FeedError", "fetch_ct_rows", "fetch_rss_rows",
+    "AudienceRecord",
+    "HealthBoard", "SourceStatus",
+    "PublishRefused", "publish_json",
+    "Market", "ARABIC_BASELINE", "OPTIONAL_COMPETITOR", "scope",
+    "MarketCoverage", "market_coverage", "coverage_matrix", "registered_market_coverage",
+    "OnboardingReport", "validate_manifest",
+    "Detector", "DetectorRegistry", "declared_fleet",
+    "ReadinessReport", "assess",
 ]

@@ -1,0 +1,11 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 720" fill="none">
+<defs><radialGradient id="lens"><stop stop-color="#79fff0" stop-opacity=".3"/><stop offset=".35" stop-color="#12dcca" stop-opacity=".08"/><stop offset="1" stop-color="#12dcca" stop-opacity="0"/></radialGradient><linearGradient id="arc" x1="90" y1="100" x2="620" y2="590"><stop stop-color="#12e9d0"/><stop offset=".52" stop-color="#65aaff"/><stop offset="1" stop-color="#9dfff2"/></linearGradient></defs>
+<circle cx="360" cy="360" r="320" stroke="#29e9d6" stroke-opacity=".16"/><circle cx="360" cy="360" r="286" stroke="#29e9d6" stroke-opacity=".22" stroke-dasharray="2 8"/><circle cx="360" cy="360" r="230" stroke="#60aaff" stroke-opacity=".28"/><circle cx="360" cy="360" r="202" stroke="#29e9d6" stroke-opacity=".32" stroke-dasharray="80 16 10 16"/>
+<circle cx="360" cy="360" r="146" fill="url(#lens)"/><circle cx="360" cy="360" r="116" stroke="#39f0dc" stroke-opacity=".45"/><circle cx="360" cy="360" r="88" stroke="#a3fff5" stroke-opacity=".52" stroke-dasharray="1 5"/>
+<path d="M360 45v94m0 442v94M45 360h94m442 0h94M137 137l68 68m310 310 68 68m0-446-68 68m-310 310-68 68" stroke="#36f1dc" stroke-opacity=".42"/>
+<path d="M360 55a305 305 0 0 1 271 165M628 495a305 305 0 0 1-246 169M92 458a274 274 0 0 1 61-292M454 91a274 274 0 0 1 171 250" stroke="url(#arc)" stroke-width="2" stroke-linecap="round" stroke-dasharray="46 14 122 24"/>
+<path d="M105 255h100l28 28h70M615 465H515l-28-28h-70M190 568v-76l27-27v-65M530 152v76l-27 27v65" stroke="#64aaff" stroke-opacity=".52"/>
+<path d="M320 360h80M360 320v80" stroke="#bcfff8" stroke-opacity=".8"/><circle cx="360" cy="360" r="12" stroke="#c2fff9" stroke-opacity=".8"/><circle cx="360" cy="360" r="4" fill="#c2fff9"/>
+<path d="M360 14v22M360 684v22M14 360h22M684 360h22" stroke="#59f3df" stroke-width="2"/><path d="M185 360h48m254 0h48M360 185v48m0 254v48" stroke="#59f3df" stroke-opacity=".65"/>
+<g stroke="#54c9dc" stroke-opacity=".45"><path d="M100 360h30m10 0h18m10 0h12m80 0h14m14 0h18m216 0h14m14 0h18m12 0h18m10 0h30"/><path d="M360 100v30m0 10v18m0 10v12m0 80v14m0 14v18m0 216v14m0 14v18m0 12v18m0 10v30"/></g>
+</svg>

@@ -1,0 +1,17 @@
+{
+  "generated_at": "2026-11-05T00:00:00Z",
+  "coverage_label": "UNMEASURED",
+  "coverage_reason": "Add independent detector spans before publishing a coverage number.",
+  "works": [
+    {
+      "id": "demo-series",
+      "kind": "SERIES",
+      "titles": {"ar": "عنوان تجريبي", "en": "Demo Series"},
+      "holder_id": "demo-holder",
+      "first_broadcast": "2026-01-10"
+    }
+  ],
+  "rights": [],
+  "channels": [],
+  "observations": []
+}

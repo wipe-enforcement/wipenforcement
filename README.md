@@ -45,9 +45,16 @@ qarin/            the measurement core (Python, standard library only)
   metrics.py      supply coverage, reappearance latency, completeness, gaps
   enforce.py      notice → outcome → reappearance → recalibration
   report.py       evidence packs and tariff quotations
+  collector.py    public CT feed intake -> classified, metadata-only receipts
+  connectors.py   public JSON feed adapters with explicit transport failures
+                  plus RSS/Atom host extraction for independent public signals
+  audience.py     aggregate legal audience, demographic, device, sponsor data
+  health.py       source freshness and fail-closed live status board
+  publish.py      atomic local publication with health gating
+  scope.py        declared ten-market Arabic baseline and optional competitor
 index.html        the public page (single self-contained HTML file, served by Pages)
 docs/             THESIS.md · SOURCES.md · METHOD notes
-tests/            141 unit tests
+  tests/            229 unit tests
 tools/            one-command contract check
 ```
 
@@ -58,12 +65,67 @@ python tools/qarin_selfcheck.py     # 71 contract checks + the unit suite
 python -m unittest discover -s tests
 ```
 
+The first collector boundary is offline-first and accepts either plain
+hostnames or newline-delimited JSON from a public Certificate Transparency
+feed. It classifies names, emits only actionable hits, and can append sealed
+metadata-only receipts to a JSONL ledger:
+
+```bash
+python tools/collect_ct.py feed.ndjson --ledger vault/ct-ledger.jsonl
+python tools/collect_ct.py --url 'https://crt.sh/?q=%25.example.org&output=json'
+python tools/build_radar.py private/radar-manifest.json --out site/data/radar.json
+python tools/collect_public.py --rss-url 'https://example.org/public-feed.xml'
+python tools/run_once.py --file public-fixture.ndjson --out site/data/public-collection.json
+```
+
+The radar manifest is the local onboarding boundary for works, rights,
+verified legal channels, observations, and source IDs. The example manifest
+contains no real titles or measurements. Scheduling and publishing it requires
+an explicit operator deployment decision because the resulting snapshot may
+contain private rights and enforcement intelligence.
+
+Legal audience imports use `AudienceRecord`: only aggregate exports are accepted,
+cohorts below 30 are rejected, and device/demographic shares must reconcile to
+100%. These figures remain separate from public piracy observations; they are
+not used to invent an illegal-view denominator.
+
+`HealthBoard.live` is true only when at least one configured source exists and
+every source is healthy. Empty, stale, errored, and unconfigured feeds remain
+visible as non-live states.
+
+`collect_public.py` includes that health payload beside every collection result,
+so an orchestrator can reject stale or partial runs before they reach radar.
+
+`publish_public.py` is the final local handoff. It refuses to replace the
+snapshot unless `health.live` is true, writes through a temporary file, fsyncs,
+and atomically replaces the destination. External scheduling and deployment
+remain an explicit operator decision.
+
+The initial scope is ten explicitly named Arabic markets. They are labelled
+`NOT_CONFIGURED` until source coverage is actually measured; the list is not a
+ranking and must not be read as one. Türkiye is available as an optional
+comparison market, not silently mixed into the Arabic baseline.
+
+`market_coverage()` computes the 95% target separately for each market from
+independent detector spans. One detector, a thin corpus, or a blind pair yields
+`INSUFFICIENT_EVIDENCE`; it never borrows another market's denominator.
+
+`run_once.py` composes the complete local cycle and is the intended entry point
+for an operator-approved scheduler. It accepts exactly one source per run,
+publishes only healthy output, and leaves the previous snapshot untouched on
+transport or parsing failure.
+
+The collector never fetches a hostname, stores audiovisual media, identifies a
+viewer, or turns an unrecognised row into a negative finding. Feed observations
+without a replay recipe remain `LOG_ONLY` until a second independent observer
+or an external anchor upgrades them.
+
 No dependencies. No network at test time. Deterministic. Exits non-zero if
 anything fails, so it is the CI gate (`.github/workflows/validate.yml`) and the
 answer to *"how do I know this instrument is honest?"* — printed, not asserted.
 
 ```
-ALL 14 CONTRACT SECTIONS PASSED — 71 checks, of which 30 are refusals — 141 UNIT TESTS GREEN
+ALL 15 CONTRACT SECTIONS PASSED — 82 checks, of which 35 are refusals — 229 UNIT TESTS GREEN
 ```
 
 ## The three ideas worth knowing before you read the code
@@ -170,6 +232,38 @@ infrastructure in phase one. Hostnames divide the product:
 | `radar` | live meters and counters |
 | `index` | quarterly methodology-transparent report |
 | `verify` | owner portal and evidence vault, behind Cloudflare Access |
+
+`validate_manifest()` is the private onboarding gate. It requires provenance
+for rights and verified channels, warns when candidate channels are excluded,
+checks observation references, and rejects viewer identifiers anywhere in the
+payload before publication.
+
+`DetectorRegistry` counts independence groups, not query variants. Two search
+queries against one index remain one detector; a genuinely different surface
+can add one independent group only when it is explicitly configured and live.
+`declared_fleet()` materializes all 17 declared surfaces as `PLANNED`, giving
+the operator a procurement checklist without claiming any of them is live.
+
+`assess()` reports launch blockers explicitly: ten-market scope, measured
+markets, independent live detectors, healthy sources, valid onboarding, and
+explicit deployment authorization.
+
+The operator-facing command is:
+
+```bash
+python tools/readiness.py private/radar-manifest.json --health health.json
+```
+
+It exits `1` until every launch condition is satisfied.
+
+Run it before building radar:
+
+```bash
+python tools/validate_manifest.py private/radar-manifest.json
+```
+
+Exit code `0` means the manifest is structurally ready; exit code `1` means it
+must not be published yet.
 
 ---
 
