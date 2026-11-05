@@ -85,6 +85,7 @@ from .market_metrics import MarketCoverage, coverage_matrix, market_coverage, re
 from .onboarding import OnboardingReport, validate_manifest
 from .detectors import Detector, DetectorRegistry, declared_fleet
 from .readiness import ReadinessReport, assess
+from .source_catalog import PublicSource, coverage_sources, public_sources
 
 __all__ = [
     "Work", "WorkKind", "Right", "Territory", "AuthorisedChannel", "Availability",
@@ -110,4 +111,5 @@ __all__ = [
     "OnboardingReport", "validate_manifest",
     "Detector", "DetectorRegistry", "declared_fleet",
     "ReadinessReport", "assess",
+    "PublicSource", "coverage_sources", "public_sources",
 ]
