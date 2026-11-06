@@ -1,9 +1,9 @@
 # WIPE Enforcement
 
-**Measured evidence of unauthorised distribution of Arabic and MENA audiovisual
-content.** Not an audience estimate — a count of the copies, an attribution of
-the businesses running them, and a quotation of the gap at the rightsholder's own
-tariff.
+**WIPE is being built to record and review publicly observable offers of Arabic
+and MENA audiovisual works.** A public listing is an observation—not proof of
+infringement, audience size, revenue loss, or who operates a service. No
+production source feed or live measurement is configured in this repository.
 
 🌐 **[wipenforcement.org](https://wipenforcement.org)** ·
 `enforcement@wipenforcement.org`
@@ -12,25 +12,11 @@ tariff.
 
 ## The premise
 
-Twenty years of anti-piracy reporting has produced audience estimates nobody can
-disprove — which is the same as nobody believing them. The reason is structural:
-counting a hidden audience requires assuming a counterfactual no one can observe
-(*would they have paid?*), and the entire spread of published "loss" figures is
-explained by where each vendor sets that dial.
-
-> **Demand is uncountable. Supply is enumerable.**
-
-Every unauthorised offering must be public somewhere in order to earn anything.
-A paywall, an ad slot, a reseller catalogue, a Telegram premium channel and an
-IPTV panel are all advertisements. So we measure that instead:
-
-| | The industry | WIPE |
-|---|---|---|
-| Question | how many people watched illegally | where is it offered, who runs it, what does it earn |
-| Requires assuming viewer behaviour | yes, unavoidably | **no instrument here does** |
-| Falsifiable by a hostile third party | nobody, ever | from our receipts alone |
-
-A claim that can be broken is a claim you can win.
+The product direction is an evidence ledger: record what was publicly visible,
+where and when it was observed, how it was matched to a work, and what remains
+uncertain. Keep that evidence separate from audience records, rights conclusions,
+operator attribution, and estimates of financial harm. Each of those requires
+its own source and review; none can be inferred from a listing alone.
 
 ## What is in here
 
@@ -52,7 +38,9 @@ qarin/            the measurement core (Python, standard library only)
   health.py       source freshness and fail-closed live status board
   publish.py      atomic local publication with health gating
   scope.py        declared ten-market Arabic baseline and optional competitor
-index.html        the public page (single self-contained HTML file, served by Pages)
+index.html        bilingual public overview
+assets/site.*     shared responsive design system and English/Arabic language switch
+site/             method, measurement status, reports, pilot, and governance pages
 docs/             THESIS.md · SOURCES.md · METHOD notes
   tests/            236 unit tests
 tools/            one-command contract check
@@ -209,27 +197,27 @@ computed at runtime, not typed.
 
 ## Legal posture
 
-Findings are **evidence of availability, not legal determinations**. Collection is
-passive and public; robots.txt is respected on every monitored surface. Saudi PDPL
-and the UAE framework differ materially on privacy and on evidence admissibility —
-a written local opinion is a **precondition** of operating in those markets, not a
-parallel task. Attribution confidence is not proof: `OPERATOR` means "cannot be
-explained by shared vendor relationships", and a court may want the C3/C4
-escalation path (independent observer, then notary), which is a service to buy,
-not an algorithm to write.
+The site publishes no live measurements and no production collection source is
+configured. A public URL does not itself grant permission to collect or reuse
+information. Before any source is used, review its terms, access limits, robots
+directives, privacy impact, retention, and applicable local law; document the
+decision and responsible operator. Qualified local counsel must review each
+market before collection or use of evidence. This repository is not a legal
+opinion or a compliance certification.
 
 ## Deployment
 
-Static site on Cloudflare Pages, collector on GitHub Actions cron, no paid
-infrastructure in phase one. Hostnames divide the product:
+The repository describes Cloudflare Pages as a hosting target, but does not
+establish that a current deployment is live or validated. The root `_headers`
+file supplies security headers for Cloudflare Pages. No collector schedule or
+private review portal is configured here.
 
-| Host | Job |
+| Surface | Current status |
 |---|---|
-| `www` | `index.html` — this page |
-| `method` | formulas, sources, limitations, public error log |
-| `radar` | live meters and counters |
-| `index` | quarterly methodology-transparent report |
-| `verify` | owner portal and evidence vault, behind Cloudflare Access |
+| Public site | Static bilingual preview in `index.html` and `site/` |
+| Measurements and reports | No validated public snapshot or report is published |
+| Rightsholder review | Pilot discussion only; no private portal or access control |
+| Collection schedule | No production schedule is configured |
 
 `validate_manifest()` is the private onboarding gate. It requires provenance
 for rights and verified channels, warns when candidate channels are excluded,
